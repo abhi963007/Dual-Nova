@@ -64,7 +64,7 @@ const About = () => {
       <section className="pt-24 pb-16 px-6">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400">
-            About Code Piece
+            About Dual Nova Lab
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
             We are a passionate team of developers and designers dedicated to crafting exceptional digital experiences that drive business growth and innovation.
