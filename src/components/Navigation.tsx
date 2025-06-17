@@ -41,14 +41,14 @@ export const Navigation = () => {
           <Link 
             to="/"
             className="group flex items-center gap-2 transition-all duration-300"
-            aria-label="CODE PIECE - Home"
+            aria-label="DUAL NOVA LAB - Home"
           >
             <div className="relative flex items-center justify-center w-10 h-10 overflow-hidden">
               <div className="absolute inset-0 bg-accent-gradient rounded-lg opacity-70 group-hover:opacity-100 transition-all duration-500 animate-glow"></div>
               <Code size={20} className="text-white z-10 animate-pulse-slow" />
             </div>
             <span className="text-2xl font-extrabold text-transparent bg-clip-text bg-accent-gradient">
-              CODE PIECE
+              DUAL NOVA LAB
             </span>
           </Link>
 
