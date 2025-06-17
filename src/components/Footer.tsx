@@ -23,7 +23,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Company Info */}
           <div className="lg:col-span-1">
-            <h3 className="text-2xl font-bold mb-4">CODE PIECE</h3>
+            <h3 className="text-2xl font-bold mb-4">DUAL NOVA LAB</h3>
             <p className="text-gray-400 mb-6 leading-relaxed">
               Crafting smart digital solutions with passion and precision. 
               Your vision, our expertise.
@@ -103,7 +103,7 @@ export const Footer = () => {
         {/* Copyright */}
         <div className="border-t border-gray-800 pt-8 text-center">
           <p className="text-gray-400">
-            © 2024 Code Piece. All rights reserved. Crafted with ❤️ in Kerala.
+            © 2024 Dual Nova Lab. All rights reserved. Crafted with ❤️ in Kerala.
           </p>
         </div>
       </div>

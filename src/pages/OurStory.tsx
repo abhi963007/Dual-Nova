@@ -73,7 +73,7 @@ const OurStory = () => {
             Our Story
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed animate-fade-in-up delay-200">
-            From a small idea in Kochi to a global digital solutions partner - discover the journey that shaped Code Piece into what it is today.
+            From a small idea in Kochi to a global digital solutions partner - discover the journey that shaped Dual Nova Lab into what it is today.
           </p>
         </div>
       </section>
@@ -131,7 +131,7 @@ const OurStory = () => {
               <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">Our Mission</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
-                  At Code Piece, we believe that technology should be a bridge, not a barrier. Our mission is to democratize access to high-quality digital solutions, making cutting-edge technology accessible to businesses of all sizes.
+                  At Dual Nova Lab, we believe that technology should be a bridge, not a barrier. Our mission is to democratize access to high-quality digital solutions, making cutting-edge technology accessible to businesses of all sizes.
                 </p>
                 <p>
                   We're not just building applications; we're crafting digital experiences that connect people, solve real problems, and drive meaningful change in the world.
