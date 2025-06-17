@@ -96,7 +96,7 @@ const About = () => {
               <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">Our Story</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
-                  Founded in 2020 in the beautiful coastal city of Kochi, Kerala, Code Piece began as a vision to bridge the gap between innovative technology and practical business solutions.
+                  Founded in 2020 in the beautiful coastal city of Kochi, Kerala, Dual Nova Lab began as a vision to bridge the gap between innovative technology and practical business solutions.
                 </p>
                 <p>
                   What started as a small team of passionate developers has grown into a full-service digital agency, helping businesses across the globe transform their ideas into powerful digital experiences.
