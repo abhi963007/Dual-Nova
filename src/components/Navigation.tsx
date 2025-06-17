@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Code } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '../hooks/use-mobile';
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,7 +50,7 @@ export const Navigation = () => {
               <Code size={20} className="text-white z-10 animate-pulse-slow" />
             </div>
             <span className={`${isMobile ? 'text-xl' : 'text-2xl'} font-extrabold text-transparent bg-clip-text bg-accent-gradient`}>
-              DUAL NOVA LAB
+              DUAL NOVA
             </span>
           </Link>
 

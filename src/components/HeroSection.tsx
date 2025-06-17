@@ -9,6 +9,7 @@ export const HeroSection = () => {
   const [typedText, setTypedText] = useState('');
   const fullText = 'Dual Nova Lab';
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [typingComplete, setTypingComplete] = useState(false);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
@@ -22,6 +23,7 @@ export const HeroSection = () => {
         setCurrentIndex(currentIndex + 1);
       } else {
         clearInterval(typingInterval);
+        setTypingComplete(true);
       }
     }, 100);
 
@@ -88,7 +90,7 @@ export const HeroSection = () => {
           isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
         }`}>
           {typedText}
-          <span className="inline-block w-[5px] h-[0.9em] bg-blue-400 ml-1 animate-pulse"></span>
+          {!typingComplete && <span className="inline-block w-[5px] h-[0.9em] bg-blue-400 ml-1 animate-pulse"></span>}
         </h1>
         
         {/* Tagline with staggered reveal */}
