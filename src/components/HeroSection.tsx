@@ -24,10 +24,7 @@ export const HeroSection = () => {
         <h1 className={`text-6xl md:text-8xl lg:text-9xl font-black text-white mb-8 tracking-tight transition-all duration-1000 ${
           isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
         }`}>
-          <span className="inline-block">CODE</span>
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 animate-glow">
-            PIECE
-          </span>
+
         </h1>
       </div>
 
@@ -71,7 +68,7 @@ export const HeroSection = () => {
       </div>
 
       {/* Scroll Indicator */}
-      <div className={`absolute bottom-16 left-1/2 transform -translate-x-1/2 transition-all duration-1000 delay-1000 ${
+      <div className={`absolute bottom-24 left-1/2 transform -translate-x-1/2 transition-all duration-1000 delay-1000 ${
         isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
       }`}>
         <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
