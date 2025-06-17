@@ -150,7 +150,7 @@ const About = () => {
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">Meet Our Team</h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              The talented individuals behind Code Piece's success.
+              The talented individuals behind Dual Nova Lab's success.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
