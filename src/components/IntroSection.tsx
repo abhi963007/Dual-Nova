@@ -83,7 +83,7 @@ export const IntroSection = () => {
   ];
 
   return (
-    <section ref={sectionRef} className="py-20 px-6 relative overflow-hidden">
+    <section ref={sectionRef} id="intro-section" className="py-20 px-6 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5"></div>
       

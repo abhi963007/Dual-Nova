@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Globe, MapPin, ArrowRight, Code, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -9,6 +10,7 @@ export const HeroSection = () => {
   const fullText = 'Dual Nova Lab';
   const [currentIndex, setCurrentIndex] = useState(0);
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 200);
@@ -28,6 +30,28 @@ export const HeroSection = () => {
       clearInterval(typingInterval);
     };
   }, [currentIndex]);
+
+  // Handle button clicks
+  const handleServicesClick = () => {
+    navigate('/services');
+  };
+  
+  const handleProjectsClick = () => {
+    navigate('/projects');
+  };
+  
+  // Handle scroll down click
+  const handleScrollClick = () => {
+    const introSection = document.querySelector('#intro-section');
+    if (introSection) {
+      introSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollTo({
+        top: window.innerHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   return (
     <header className="min-h-screen flex flex-col justify-center items-center relative pt-16 px-4 sm:px-6 bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#121212] overflow-hidden">
@@ -78,11 +102,18 @@ export const HeroSection = () => {
         <div className={`flex flex-col sm:flex-row gap-3 sm:gap-5 justify-center mt-6 sm:mt-8 transition-all duration-1000 delay-500 ${
           isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
         }`}>
-          <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 sm:px-8 py-5 sm:py-6 rounded-full flex items-center gap-2 group transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 animate-scale-in">
+          <Button 
+            onClick={handleServicesClick}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 sm:px-8 py-5 sm:py-6 rounded-full flex items-center gap-2 group transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 animate-scale-in"
+          >
             Our Services
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
           </Button>
-          <Button variant="outline" className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm border border-gray-700/50 text-white px-6 sm:px-8 py-5 sm:py-6 rounded-full hover:bg-gray-800/60 hover:border-gray-600/60 flex items-center gap-2 group transition-all duration-300 animate-scale-in">
+          <Button 
+            onClick={handleProjectsClick}
+            variant="outline" 
+            className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm border border-gray-700/50 text-white px-6 sm:px-8 py-5 sm:py-6 rounded-full hover:bg-gray-800/60 hover:border-gray-600/60 flex items-center gap-2 group transition-all duration-300 animate-scale-in"
+          >
             <Code size={18} className="group-hover:rotate-12 transition-transform duration-300" />
             View Projects
           </Button>
@@ -158,11 +189,14 @@ export const HeroSection = () => {
       </div>
 
       {/* Scroll Indicator - moved up on mobile */}
-      <div className={`absolute ${isMobile ? 'bottom-6' : 'bottom-24'} w-full flex justify-center items-center`}>
-        <div className={`flex flex-col items-center transition-opacity duration-1000 delay-1000 ${
+      <div 
+        onClick={handleScrollClick}
+        className={`absolute ${isMobile ? 'bottom-6' : 'bottom-24'} w-full flex justify-center items-center`}
+      >
+        <div className={`flex flex-col items-center transition-opacity duration-1000 delay-1000 cursor-pointer ${
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}>
-          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center hover:border-blue-400 transition-colors duration-300 cursor-pointer">
+          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center hover:border-blue-400 transition-colors duration-300">
             <div className="w-1 h-3 bg-gradient-to-b from-blue-400 to-transparent rounded-full mt-2 animate-bounce"></div>
           </div>
           <p className="text-xs text-gray-400 mt-2 text-center">Scroll Down</p>
