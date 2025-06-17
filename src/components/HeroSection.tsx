@@ -121,7 +121,7 @@ export const HeroSection = () => {
       </div>
 
       {/* Floating Badge - repositioned for mobile */}
-      <div className={`absolute ${isMobile ? 'top-20 right-4' : 'top-32 md:top-40 right-8 md:right-16'} transition-all duration-1000 delay-700 ${
+      <div className={`absolute ${isMobile ? 'top-24 right-4' : 'top-32 md:top-40 right-8 md:right-16'} transition-all duration-1000 delay-700 ${
         isVisible ? 'animate-slide-in-right' : 'opacity-0 translate-x-10'
       }`}>
         <div className="flex items-center gap-2 bg-gradient-to-r from-blue-900/30 to-indigo-900/30 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-blue-500/30 animate-glow">
@@ -132,34 +132,38 @@ export const HeroSection = () => {
 
       {/* Location and Scroll Down Container - Mobile Optimized */}
       {isMobile ? (
-        <div className="absolute bottom-6 left-0 right-0 flex flex-col items-center gap-5">
-          {/* Location Badge - Mobile Design */}
-          <div className={`flex items-center justify-center gap-3 rounded-full bg-black/60 backdrop-blur-sm py-2 px-4 border border-green-800/40 transition-all duration-1000 delay-800 ${
-            isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-          }`}>
-            <div className="w-10 h-10 rounded-full bg-green-900/30 flex items-center justify-center">
-              <MapPin size={20} className="text-green-500" />
-            </div>
-            <div className="flex flex-col items-start">
-              <span className="text-xs text-gray-400">Location</span>
-              <span className="text-base font-bold text-white">Kochi, Kerala</span>
+        <>
+          {/* Location Badge - Mobile Design - Left positioned */}
+          <div className="absolute bottom-28 left-0 w-full px-6 flex justify-center">
+            <div className={`flex items-center justify-center gap-3 rounded-full bg-black/60 backdrop-blur-sm py-2 px-4 border border-green-800/40 transition-all duration-1000 delay-800 ${
+              isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+            }`}>
+              <div className="w-10 h-10 rounded-full bg-green-900/30 flex items-center justify-center">
+                <MapPin size={20} className="text-green-500" />
+              </div>
+              <div className="flex flex-col items-start">
+                <span className="text-xs text-gray-400">Location</span>
+                <span className="text-base font-bold text-white">Kochi, Kerala</span>
+              </div>
             </div>
           </div>
           
-          {/* Scroll Indicator - Restyled for Mobile */}
+          {/* Scroll Indicator - Centered and below location badge */}
           <div 
             onClick={handleScrollClick}
-            className={`flex flex-col items-center transition-opacity duration-1000 delay-1000 cursor-pointer ${
-              isVisible ? 'opacity-100' : 'opacity-0'
-            }`}
+            className="absolute bottom-6 left-0 w-full flex justify-center"
           >
-            <div className="w-6 h-10 border-2 border-blue-500/40 rounded-full flex justify-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-blue-900/10 backdrop-blur-sm"></div>
-              <div className="w-1 h-3 bg-gradient-to-b from-blue-400 to-transparent rounded-full mt-2 animate-bounce relative z-10"></div>
+            <div className={`flex flex-col items-center transition-opacity duration-1000 delay-1000 cursor-pointer ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`}>
+              <div className="w-6 h-10 border-2 border-blue-500/40 rounded-full flex justify-center relative overflow-hidden bg-black/50">
+                <div className="absolute inset-0 bg-blue-900/10 backdrop-blur-sm"></div>
+                <div className="w-1 h-3 bg-gradient-to-b from-blue-400 to-transparent rounded-full mt-2 animate-bounce relative z-10"></div>
+              </div>
+              <p className="text-xs text-blue-300 mt-1 text-center font-medium">Scroll Down</p>
             </div>
-            <p className="text-xs text-gray-300 mt-2 text-center">Scroll Down</p>
           </div>
-        </div>
+        </>
       ) : (
         /* Desktop version remains with existing components */
         <>

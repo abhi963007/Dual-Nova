@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Code } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,7 +49,7 @@ export const Navigation = () => {
               <div className="absolute inset-0 bg-accent-gradient rounded-lg opacity-70 group-hover:opacity-100 transition-all duration-500 animate-glow"></div>
               <Code size={20} className="text-white z-10 animate-pulse-slow" />
             </div>
-            <span className="text-2xl font-extrabold text-transparent bg-clip-text bg-accent-gradient">
+            <span className={`${isMobile ? 'text-xl' : 'text-2xl'} font-extrabold text-transparent bg-clip-text bg-accent-gradient`}>
               DUAL NOVA LAB
             </span>
           </Link>
@@ -79,7 +81,7 @@ export const Navigation = () => {
             </div>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu button - positioned to avoid badge overlap */}
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
