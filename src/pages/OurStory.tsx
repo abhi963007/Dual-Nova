@@ -1,8 +1,9 @@
 import React from 'react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
-import { Calendar, MapPin, Users, Award, Lightbulb, Target } from 'lucide-react';
+import { Calendar, MapPin, Users, Award, Lightbulb, Target, CheckCircle, Handshake, BookOpen, Rocket } from 'lucide-react';
 import { useIsMobile } from '../hooks/use-mobile';
+import { Link } from 'react-router-dom';
 
 const OurStory = () => {
   const isMobile = useIsMobile();
@@ -44,22 +45,30 @@ const OurStory = () => {
     {
       title: 'Quality First',
       description: 'We never compromise on quality. Every line of code, every design element is crafted with precision.',
-      color: 'from-blue-500 to-cyan-500'
+      color: 'from-blue-500 to-cyan-500',
+      path: '/values/quality-first',
+      icon: CheckCircle
     },
     {
       title: 'Client Partnership',
       description: 'We see ourselves as partners in your success, not just service providers.',
-      color: 'from-purple-500 to-pink-500'
+      color: 'from-purple-500 to-pink-500',
+      path: '/values/client-partnership',
+      icon: Handshake
     },
     {
       title: 'Continuous Learning',
       description: 'Technology evolves rapidly, and so do we. We stay ahead of the curve.',
-      color: 'from-green-500 to-emerald-500'
+      color: 'from-green-500 to-emerald-500',
+      path: '/values/continuous-learning',
+      icon: BookOpen
     },
     {
       title: 'Innovation Driven',
       description: 'We love solving complex problems with creative and innovative solutions.',
-      color: 'from-orange-500 to-red-500'
+      color: 'from-orange-500 to-red-500',
+      path: '/values/innovation-driven',
+      icon: Rocket
     }
   ];
 
@@ -198,17 +207,32 @@ const OurStory = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-            {values.map((value, index) => (
-              <div key={index} className="group">
-                <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 sm:p-8 h-full hover:border-blue-500/30 transition-all duration-300">
-                  <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${value.color} rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white/10 rounded-lg"></div>
+            {values.map((value, index) => {
+              const Icon = value.icon;
+              return (
+                <Link 
+                  to={value.path} 
+                  key={index} 
+                  className="group"
+                >
+                  <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 sm:p-8 h-full hover:border-blue-500/30 hover:scale-[1.02] transition-all duration-300">
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${value.color} rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                      <Icon size={isMobile ? 20 : 24} className="text-white" />
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-400 transition-all duration-300">{value.title}</h3>
+                    <p className="text-gray-400 text-sm sm:text-base leading-relaxed">{value.description}</p>
+                    <div className="mt-4 sm:mt-6 flex justify-end">
+                      <span className="text-sm text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center">
+                        Learn more
+                        <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </span>
+                    </div>
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-white">{value.title}</h3>
-                  <p className="text-gray-400 text-sm sm:text-base leading-relaxed">{value.description}</p>
-                </div>
-              </div>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

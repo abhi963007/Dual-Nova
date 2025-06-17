@@ -20,6 +20,12 @@ import ApiDevelopment from "./pages/ApiDevelopment";
 import UiUxDesign from "./pages/UiUxDesign";
 import PerformanceOptimization from "./pages/PerformanceOptimization";
 
+// Core value pages
+import QualityFirst from "./pages/QualityFirst";
+import ClientPartnership from "./pages/ClientPartnership";
+import ContinuousLearning from "./pages/ContinuousLearning";
+import InnovationDriven from "./pages/InnovationDriven";
+
 // Scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -55,6 +61,12 @@ const App = () => (
           <Route path="/services/api-development" element={<ApiDevelopment />} />
           <Route path="/services/ui-ux-design" element={<UiUxDesign />} />
           <Route path="/services/performance-optimization" element={<PerformanceOptimization />} />
+          
+          {/* Core Value Pages */}
+          <Route path="/values/quality-first" element={<QualityFirst />} />
+          <Route path="/values/client-partnership" element={<ClientPartnership />} />
+          <Route path="/values/continuous-learning" element={<ContinuousLearning />} />
+          <Route path="/values/innovation-driven" element={<InnovationDriven />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

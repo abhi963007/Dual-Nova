@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Code, Smartphone, Globe, Database, Palette, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -15,7 +14,8 @@ export const ServicesSection = () => {
       image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop',
       gradient: 'from-blue-500/20 to-blue-600/10',
       iconColor: 'text-blue-400',
-      borderColor: 'border-blue-500/30'
+      borderColor: 'border-blue-500/30',
+      path: '/services/web-development'
     },
     {
       icon: Smartphone,
@@ -24,7 +24,8 @@ export const ServicesSection = () => {
       image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=300&fit=crop',
       gradient: 'from-purple-500/20 to-purple-600/10',
       iconColor: 'text-purple-400',
-      borderColor: 'border-purple-500/30'
+      borderColor: 'border-purple-500/30',
+      path: '/services/mobile-development'
     },
     {
       icon: Globe,
@@ -33,7 +34,8 @@ export const ServicesSection = () => {
       image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop',
       gradient: 'from-green-500/20 to-emerald-600/10',
       iconColor: 'text-green-400',
-      borderColor: 'border-green-500/30'
+      borderColor: 'border-green-500/30',
+      path: '/services/full-stack-solutions'
     },
     {
       icon: Database,
@@ -42,7 +44,8 @@ export const ServicesSection = () => {
       image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop',
       gradient: 'from-cyan-500/20 to-cyan-600/10',
       iconColor: 'text-cyan-400',
-      borderColor: 'border-cyan-500/30'
+      borderColor: 'border-cyan-500/30',
+      path: '/services/api-development'
     },
     {
       icon: Palette,
@@ -51,7 +54,8 @@ export const ServicesSection = () => {
       image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=300&fit=crop',
       gradient: 'from-pink-500/20 to-rose-600/10',
       iconColor: 'text-pink-400',
-      borderColor: 'border-pink-500/30'
+      borderColor: 'border-pink-500/30',
+      path: '/services/ui-ux-design'
     },
     {
       icon: Zap,
@@ -60,7 +64,8 @@ export const ServicesSection = () => {
       image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=400&h=300&fit=crop',
       gradient: 'from-yellow-500/20 to-orange-600/10',
       iconColor: 'text-yellow-400',
-      borderColor: 'border-yellow-500/30'
+      borderColor: 'border-yellow-500/30',
+      path: '/services/performance-optimization'
     }
   ];
 
@@ -118,7 +123,7 @@ export const ServicesSection = () => {
             const Icon = service.icon;
             return (
               <Link
-                to={`/services/${service.title.toLowerCase().replace(/\s+/g, '-')}`}
+                to={service.path}
                 key={index}
                 data-card-index={index}
                 className={`group bg-gradient-to-br from-[#121212] to-[#0a0a0a] rounded-xl overflow-hidden cursor-pointer transition-all duration-500 hover:scale-[1.05] border ${service.borderColor} hover:shadow-2xl hover:shadow-blue-500/20 backdrop-blur-sm ${
