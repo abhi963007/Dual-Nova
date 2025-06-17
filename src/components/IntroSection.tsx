@@ -92,7 +92,7 @@ export const IntroSection = () => {
           isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
         }`}>
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400">
-            CODE PIECE
+            DUAL NOVA LAB
           </span>
           <br />
           <span className="text-2xl md:text-3xl font-medium text-gray-300">
