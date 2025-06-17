@@ -1,6 +1,6 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Instagram, Linkedin, Youtube, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const IntroSection = () => {
   const [techCount, setTechCount] = useState(0);
@@ -161,7 +161,10 @@ export const IntroSection = () => {
           </div>
 
           {/* Enhanced Our Story Button */}
-          <button className="group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 flex items-center space-x-2 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#121212] overflow-hidden">
+          <Link 
+            to="/our-story"
+            className="group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 flex items-center space-x-2 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#121212] overflow-hidden"
+          >
             <span className="relative z-10">Our Story</span>
             <ArrowRight 
               size={18} 
@@ -169,7 +172,7 @@ export const IntroSection = () => {
             />
             {/* Button glow effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl"></div>
-          </button>
+          </Link>
         </div>
       </div>
     </section>
