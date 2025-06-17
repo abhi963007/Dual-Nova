@@ -130,29 +130,45 @@ export const HeroSection = () => {
         </div>
       </div>
 
-      {/* Enhanced Metadata Grid - simplified on mobile */}
-      <div className="absolute bottom-20 sm:bottom-8 left-0 right-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 items-center transition-all duration-1000 delay-800 ${
-            isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+      {/* Location and Scroll Down Container - Mobile Optimized */}
+      {isMobile ? (
+        <div className="absolute bottom-6 left-0 right-0 flex flex-col items-center gap-5">
+          {/* Location Badge - Mobile Design */}
+          <div className={`flex items-center justify-center gap-3 rounded-full bg-black/60 backdrop-blur-sm py-2 px-4 border border-green-800/40 transition-all duration-1000 delay-800 ${
+            isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
           }`}>
-            {/* Mobile layout - single column stacked version */}
-            {isMobile ? (
-              <div className="flex flex-col gap-4">
-                {/* Location - most important on mobile */}
-                <div className="flex items-center justify-center space-x-4 group bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-sm py-2 px-3 rounded-full">
-                  <div className="w-10 h-10 bg-gradient-to-br from-green-500/30 to-emerald-600/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-green-500/20">
-                    <MapPin size={20} className="text-green-400" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 font-medium">Location</p>
-                    <p className="text-base font-bold text-white">Kochi, Kerala</p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              // Desktop layout - unchanged
-              <>
+            <div className="w-10 h-10 rounded-full bg-green-900/30 flex items-center justify-center">
+              <MapPin size={20} className="text-green-500" />
+            </div>
+            <div className="flex flex-col items-start">
+              <span className="text-xs text-gray-400">Location</span>
+              <span className="text-base font-bold text-white">Kochi, Kerala</span>
+            </div>
+          </div>
+          
+          {/* Scroll Indicator - Restyled for Mobile */}
+          <div 
+            onClick={handleScrollClick}
+            className={`flex flex-col items-center transition-opacity duration-1000 delay-1000 cursor-pointer ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <div className="w-6 h-10 border-2 border-blue-500/40 rounded-full flex justify-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-blue-900/10 backdrop-blur-sm"></div>
+              <div className="w-1 h-3 bg-gradient-to-b from-blue-400 to-transparent rounded-full mt-2 animate-bounce relative z-10"></div>
+            </div>
+            <p className="text-xs text-gray-300 mt-2 text-center">Scroll Down</p>
+          </div>
+        </div>
+      ) : (
+        /* Desktop version remains with existing components */
+        <>
+          {/* Enhanced Metadata Grid - For Desktop Only */}
+          <div className="absolute bottom-20 sm:bottom-8 left-0 right-0">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+              <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 items-center transition-all duration-1000 delay-800 ${
+                isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+              }`}>
                 {/* Since 2020 */}
                 <div className="flex items-center justify-center md:justify-start space-x-4 group">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500/30 to-blue-600/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-blue-500/20 group-hover:scale-110 transition-all duration-300">
@@ -182,26 +198,26 @@ export const HeroSection = () => {
                     <p className="text-lg font-bold text-white group-hover:text-green-400 transition-colors duration-300">Kochi, Kerala</p>
                   </div>
                 </div>
-              </>
-            )}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Scroll Indicator - moved up on mobile */}
-      <div 
-        onClick={handleScrollClick}
-        className={`absolute ${isMobile ? 'bottom-6' : 'bottom-24'} w-full flex justify-center items-center`}
-      >
-        <div className={`flex flex-col items-center transition-opacity duration-1000 delay-1000 cursor-pointer ${
-          isVisible ? 'opacity-100' : 'opacity-0'
-        }`}>
-          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center hover:border-blue-400 transition-colors duration-300">
-            <div className="w-1 h-3 bg-gradient-to-b from-blue-400 to-transparent rounded-full mt-2 animate-bounce"></div>
+          {/* Scroll Indicator - For Desktop Only */}
+          <div 
+            onClick={handleScrollClick}
+            className="absolute bottom-24 w-full flex justify-center items-center"
+          >
+            <div className={`flex flex-col items-center transition-opacity duration-1000 delay-1000 cursor-pointer ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`}>
+              <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center hover:border-blue-400 transition-colors duration-300">
+                <div className="w-1 h-3 bg-gradient-to-b from-blue-400 to-transparent rounded-full mt-2 animate-bounce"></div>
+              </div>
+              <p className="text-xs text-gray-400 mt-2 text-center">Scroll Down</p>
+            </div>
           </div>
-          <p className="text-xs text-gray-400 mt-2 text-center">Scroll Down</p>
-        </div>
-      </div>
+        </>
+      )}
     </header>
   );
 };
