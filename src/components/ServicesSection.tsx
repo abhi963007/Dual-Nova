@@ -1,6 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Code, Smartphone, Globe, Database, Palette, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const ServicesSection = () => {
   const [visibleCards, setVisibleCards] = useState<boolean[]>([]);
@@ -116,22 +117,17 @@ export const ServicesSection = () => {
           {services.map((service, index) => {
             const Icon = service.icon;
             return (
-              <div
+              <Link
+                to={`/services/${service.title.toLowerCase().replace(/\s+/g, '-')}`}
                 key={index}
                 data-card-index={index}
                 className={`group bg-gradient-to-br from-[#121212] to-[#0a0a0a] rounded-xl overflow-hidden cursor-pointer transition-all duration-500 hover:scale-[1.05] border ${service.borderColor} hover:shadow-2xl hover:shadow-blue-500/20 backdrop-blur-sm ${
                   visibleCards[index] ? 'animate-fade-in-up opacity-100' : 'opacity-0'
                 }`}
                 style={{ animationDelay: `${index * 0.1}s` }}
-                role="button"
+                role="link"
                 tabIndex={0}
                 aria-label={`Learn more about ${service.title}`}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    // Handle card click
-                  }
-                }}
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
@@ -162,7 +158,7 @@ export const ServicesSection = () => {
                   {/* Animated bottom border */}
                   <div className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r ${service.gradient} w-0 group-hover:w-full transition-all duration-500`}></div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
