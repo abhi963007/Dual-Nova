@@ -3,6 +3,7 @@ import { Globe, MapPin, ArrowRight, Code, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Link, useNavigate } from 'react-router-dom';
+import Beams from './Beams';
 
 export const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -57,8 +58,24 @@ export const HeroSection = () => {
 
   return (
     <header className="min-h-screen flex flex-col justify-center items-center relative pt-16 px-4 sm:px-6 bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#121212] overflow-hidden">
+      {/* 3D Beams Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+          <Beams
+            beamWidth={2}
+            beamHeight={15}
+            beamNumber={12}
+            lightColor="#4f46e5"
+            speed={1}
+            noiseIntensity={1.75}
+            scale={0.2}
+            rotation={45}
+          />
+        </div>
+      </div>
+
       {/* Animated Background Elements */}
-      <div className="absolute inset-0 opacity-5">
+      <div className="absolute inset-0 opacity-5 z-0">
         <div className="absolute inset-0" style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)`,
           backgroundSize: '20px 20px'
@@ -66,7 +83,7 @@ export const HeroSection = () => {
       </div>
 
       {/* Floating Elements - fewer on mobile for better performance */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden z-0">
         {[...Array(isMobile ? 3 : 6)].map((_, i) => (
           <div 
             key={i}
@@ -125,7 +142,7 @@ export const HeroSection = () => {
       {/* Floating Badge - repositioned for mobile */}
       <div className={`absolute ${isMobile ? 'top-24 right-4' : 'top-32 md:top-40 right-8 md:right-16'} transition-all duration-1000 delay-700 ${
         isVisible ? 'animate-slide-in-right' : 'opacity-0 translate-x-10'
-      }`}>
+      } z-20`}>
         <div className="flex items-center gap-2 bg-gradient-to-r from-blue-900/30 to-indigo-900/30 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-blue-500/30 animate-glow">
           <Sparkles size={isMobile ? 14 : 16} className="text-blue-400 animate-pulse" />
           <span className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-blue-300`}>Established 2020</span>
@@ -136,7 +153,7 @@ export const HeroSection = () => {
       {isMobile ? (
         <>
           {/* Location Badge - Mobile Design - Left positioned */}
-          <div className="absolute bottom-28 left-0 w-full px-6 flex justify-center">
+          <div className="absolute bottom-28 left-0 w-full px-6 flex justify-center z-20">
             <div className={`flex items-center justify-center gap-3 rounded-full bg-black/60 backdrop-blur-sm py-2 px-4 border border-green-800/40 transition-all duration-1000 delay-800 ${
               isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
             }`}>
@@ -153,7 +170,7 @@ export const HeroSection = () => {
           {/* Scroll Indicator - Centered and below location badge */}
           <div 
             onClick={handleScrollClick}
-            className="absolute bottom-6 left-0 w-full flex justify-center"
+            className="absolute bottom-6 left-0 w-full flex justify-center z-20"
           >
             <div className={`flex flex-col items-center transition-opacity duration-1000 delay-1000 cursor-pointer ${
               isVisible ? 'opacity-100' : 'opacity-0'
@@ -170,7 +187,7 @@ export const HeroSection = () => {
         /* Desktop version remains with existing components */
         <>
           {/* Enhanced Metadata Grid - For Desktop Only */}
-          <div className="absolute bottom-20 sm:bottom-8 left-0 right-0">
+          <div className="absolute bottom-20 sm:bottom-8 left-0 right-0 z-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
               <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 items-center transition-all duration-1000 delay-800 ${
                 isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
@@ -211,7 +228,7 @@ export const HeroSection = () => {
           {/* Scroll Indicator - For Desktop Only */}
           <div 
             onClick={handleScrollClick}
-            className="absolute bottom-24 w-full flex justify-center items-center"
+            className="absolute bottom-24 w-full flex justify-center items-center z-20"
           >
             <div className={`flex flex-col items-center transition-opacity duration-1000 delay-1000 cursor-pointer ${
               isVisible ? 'opacity-100' : 'opacity-0'
