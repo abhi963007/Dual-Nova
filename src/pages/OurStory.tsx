@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { Calendar, MapPin, Users, Award, Lightbulb, Target, CheckCircle, Handshake, BookOpen, Rocket } from 'lucide-react';
 import { useIsMobile } from '../hooks/use-mobile';
 import { Link } from 'react-router-dom';
+import { motion, useInView, useAnimation, Variants } from 'framer-motion';
 
 const OurStory = () => {
   const isMobile = useIsMobile();
@@ -72,15 +73,111 @@ const OurStory = () => {
     }
   ];
 
-  // Mobile timeline style
+  // Animation variants
+  const timelineVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants: Variants = {
+    hidden: (isEven: boolean) => ({
+      x: isEven ? -50 : 50,
+      opacity: 0
+    }),
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        ease: [0.43, 0.13, 0.23, 0.96]
+      }
+    }
+  };
+
+  const timelineDotVariants: Variants = {
+    hidden: { scale: 0 },
+    visible: { 
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        delay: 0.2
+      }
+    }
+  };
+
+  // Values section animation variants
+  const valuesContainerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const valueCardVariants: Variants = {
+    hidden: { y: 50, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: [0.43, 0.13, 0.23, 0.96]
+      }
+    }
+  };
+
+  const timelineLineRef = useRef<HTMLDivElement>(null);
+  const timelineControls = useAnimation();
+  const timelineInView = useInView(timelineLineRef, {
+    once: true
+  });
+
+  const valuesRef = useRef<HTMLDivElement>(null);
+  const valuesControls = useAnimation();
+  const valuesInView = useInView(valuesRef, {
+    once: true
+  });
+
+  useEffect(() => {
+    if (timelineInView) {
+      timelineControls.start("visible");
+    }
+    
+    if (valuesInView) {
+      valuesControls.start("visible");
+    }
+  }, [timelineControls, timelineInView, valuesControls, valuesInView]);
+
+  // Mobile timeline style with animations
   const MobileTimeline = () => (
-    <div className="space-y-6">
+    <motion.div
+      className="space-y-6"
+      variants={timelineVariants}
+      initial="hidden"
+      animate={timelineControls}
+      ref={timelineLineRef}
+    >
       {milestones.map((milestone, index) => {
         const Icon = milestone.icon;
         return (
-          <div key={index} className="relative pl-8 border-l-2 border-blue-500/30">
+          <motion.div
+            key={index}
+            className="relative pl-8 border-l-2 border-blue-500/30"
+            variants={itemVariants}
+            custom={false}
+          >
             {/* Timeline dot */}
-            <div className="absolute left-[-5px] top-0 w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+            <motion.div 
+              className="absolute left-[-5px] top-0 w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+              variants={timelineDotVariants}
+            ></motion.div>
             
             {/* Content */}
             <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-4 hover:border-blue-500/30 transition-all duration-300">
@@ -95,10 +192,10 @@ const OurStory = () => {
               <h3 className="text-lg font-bold mb-2 text-white">{milestone.title}</h3>
               <p className="text-gray-400 text-sm leading-relaxed">{milestone.description}</p>
             </div>
-          </div>
+          </motion.div>
         );
       })}
-    </div>
+    </motion.div>
   );
 
   return (
@@ -131,37 +228,61 @@ const OurStory = () => {
           {isMobile ? (
             <MobileTimeline />
           ) : (
-            <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute left-1/2 transform -translate-x-px h-full w-0.5 bg-gradient-to-b from-blue-500 to-purple-500 opacity-30"></div>
+            <div className="relative" ref={timelineLineRef}>
+              {/* Timeline line with grow animation */}
+              <motion.div 
+                className="absolute left-1/2 transform -translate-x-px w-0.5 bg-gradient-to-b from-blue-500 to-purple-500 opacity-30"
+                style={{ scaleY: 0, originY: 0 }}
+                animate={{ 
+                  scaleY: timelineInView ? 1 : 0 
+                }}
+                transition={{ 
+                  duration: 1.5, 
+                  ease: [0.43, 0.13, 0.23, 0.96]
+                }}
+              ></motion.div>
               
-              {milestones.map((milestone, index) => {
-                const Icon = milestone.icon;
-                const isEven = index % 2 === 0;
-                
-                return (
-                  <div key={index} className={`relative flex items-center mb-16 ${isEven ? 'justify-start' : 'justify-end'}`}>
-                    {/* Timeline dot */}
-                    <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full border-4 border-[#121212] z-10"></div>
-                    
-                    {/* Content */}
-                    <div className={`w-5/12 ${isEven ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
-                      <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 hover:scale-105 transition-all duration-300">
-                        <div className={`flex items-center mb-4 ${isEven ? 'justify-end' : 'justify-start'}`}>
-                          <div className={`w-12 h-12 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-xl flex items-center justify-center ${isEven ? 'order-2 ml-3' : 'mr-3'}`}>
-                            <Icon size={24} className="text-blue-400" />
+              <motion.div
+                variants={timelineVariants}
+                initial="hidden"
+                animate={timelineControls}
+              >
+                {milestones.map((milestone, index) => {
+                  const Icon = milestone.icon;
+                  const isEven = index % 2 === 0;
+                  
+                  return (
+                    <motion.div 
+                      key={index} 
+                      className={`relative flex items-center mb-16 ${isEven ? 'justify-start' : 'justify-end'}`}
+                      variants={itemVariants}
+                      custom={isEven}
+                    >
+                      {/* Timeline dot */}
+                      <motion.div 
+                        className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full border-4 border-[#121212] z-10"
+                        variants={timelineDotVariants}
+                      ></motion.div>
+                      
+                      {/* Content */}
+                      <div className={`w-5/12 ${isEven ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
+                        <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 hover:scale-105 transition-all duration-300">
+                          <div className={`flex items-center mb-4 ${isEven ? 'justify-end' : 'justify-start'}`}>
+                            <div className={`w-12 h-12 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-xl flex items-center justify-center ${isEven ? 'order-2 ml-3' : 'mr-3'}`}>
+                              <Icon size={24} className="text-blue-400" />
+                            </div>
+                            <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                              {milestone.year}
+                            </span>
                           </div>
-                          <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                            {milestone.year}
-                          </span>
+                          <h3 className="text-xl font-bold mb-3 text-white">{milestone.title}</h3>
+                          <p className="text-gray-400 leading-relaxed">{milestone.description}</p>
                         </div>
-                        <h3 className="text-xl font-bold mb-3 text-white">{milestone.title}</h3>
-                        <p className="text-gray-400 leading-relaxed">{milestone.description}</p>
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
             </div>
           )}
         </div>
@@ -201,39 +322,60 @@ const OurStory = () => {
       <section className="py-12 sm:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-white">What Drives Us</h2>
-            <p className="text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto">
+            <motion.h2 
+              className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-white"
+              initial={{ opacity: 0, y: -20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+            >
+              What Drives Us
+            </motion.h2>
+            <motion.p 
+              className="text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
               Our core values are the foundation of everything we do and every decision we make.
-            </p>
+            </motion.p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8"
+            ref={valuesRef}
+            variants={valuesContainerVariants}
+            initial="hidden"
+            animate={valuesControls}
+          >
             {values.map((value, index) => {
               const Icon = value.icon;
               return (
-                <Link 
-                  to={value.path} 
-                  key={index} 
-                  className="group"
-                >
-                  <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 sm:p-8 h-full hover:border-blue-500/30 hover:scale-[1.02] transition-all duration-300">
-                    <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${value.color} rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon size={isMobile ? 20 : 24} className="text-white" />
+                <motion.div key={index} variants={valueCardVariants}>
+                  <Link 
+                    to={value.path}
+                    className="group block h-full"
+                  >
+                    <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 sm:p-8 h-full hover:border-blue-500/30 hover:scale-[1.02] transition-all duration-300">
+                      <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${value.color} rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                        <Icon size={isMobile ? 20 : 24} className="text-white" />
+                      </div>
+                      <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-400 transition-all duration-300">{value.title}</h3>
+                      <p className="text-gray-400 text-sm sm:text-base leading-relaxed">{value.description}</p>
+                      <div className="mt-4 sm:mt-6 flex justify-end">
+                        <span className="text-sm text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center">
+                          Learn more
+                          <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </span>
+                      </div>
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-400 transition-all duration-300">{value.title}</h3>
-                    <p className="text-gray-400 text-sm sm:text-base leading-relaxed">{value.description}</p>
-                    <div className="mt-4 sm:mt-6 flex justify-end">
-                      <span className="text-sm text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center">
-                        Learn more
-                        <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                </Link>
+                  </Link>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
