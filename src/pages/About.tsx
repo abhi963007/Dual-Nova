@@ -172,19 +172,19 @@ const About = () => {
     {
       name: 'Abhiram A K',
       role: 'Developer',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+      image: '/team/developer.png',
       description: 'Full-stack developer with expertise in modern web technologies and application development.'
     },
     {
       name: 'Rojin Roy',
       role: 'Developer and Designer',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face',
+      image: '/team/designer.png',
       description: 'Creative developer and designer passionate about creating intuitive and beautiful user experiences.'
     },
     {
       name: 'Arjun M B',
       role: 'Marketing Executive',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
+      image: '/team/market.png',
       description: 'Strategic marketing specialist focused on digital growth strategies and brand development.'
     },
   ];
