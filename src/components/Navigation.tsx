@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Code, LogIn, User, Lock, Eye, EyeOff } from 'lucide-react';
+import { Menu, X, Code, LogIn, User, Lock, Eye, EyeOff, Mail, ArrowLeft, Check } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useIsMobile } from '../hooks/use-mobile';
 
@@ -9,6 +9,7 @@ export const Navigation = () => {
   const [hidden, setHidden] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [modalView, setModalView] = useState<'login' | 'signup' | 'forgot-password' | 'reset-success'>('login');
   const location = useLocation();
   const isMobile = useIsMobile();
   const lastScrollY = React.useRef(0);
@@ -73,6 +74,17 @@ export const Navigation = () => {
     };
   }, [showLoginModal, isOpen]);
 
+  // Reset modal view when modal is closed
+  useEffect(() => {
+    if (!showLoginModal) {
+      // Wait for close animation to finish before resetting view
+      const timer = setTimeout(() => {
+        setModalView('login');
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [showLoginModal]);
+
   const navLinks = [
     { name: 'HOME', href: '/', ariaLabel: 'Navigate to home page' },
     { name: 'ABOUT', href: '/about', ariaLabel: 'Navigate to about page' },
@@ -89,6 +101,33 @@ export const Navigation = () => {
     console.log('Login submitted');
     // Close modal after successful login or validation
     setShowLoginModal(false);
+  };
+
+  const handleSignup = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle signup logic here
+    console.log('Signup submitted');
+    // Close modal after successful signup or validation
+    setShowLoginModal(false);
+  };
+
+  const handleForgotPassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle forgot password logic here
+    console.log('Forgot password submitted');
+    // Show success message
+    setModalView('reset-success');
+  };
+
+  // Modal title based on current view
+  const getModalTitle = () => {
+    switch (modalView) {
+      case 'login': return 'Login';
+      case 'signup': return 'Create Account';
+      case 'forgot-password': return 'Reset Password';
+      case 'reset-success': return 'Check Your Email';
+      default: return 'Account';
+    }
   };
 
   return (
@@ -121,7 +160,7 @@ export const Navigation = () => {
             : 'opacity-0 scale-95 pointer-events-none'
         }`}
         aria-modal={showLoginModal}
-        aria-labelledby="login-title"
+        aria-labelledby="modal-title"
       >
         <div className="bg-[#121212] border border-gray-800 rounded-2xl shadow-xl overflow-hidden relative">
           {/* Background gradient decoration */}
@@ -130,7 +169,20 @@ export const Navigation = () => {
           
           <div className="p-6 relative z-10">
             <div className="flex justify-between items-center mb-6">
-              <h2 id="login-title" className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Login</h2>
+              <div className="flex items-center gap-3">
+                {modalView !== 'login' && (
+                  <button 
+                    onClick={() => modalView === 'reset-success' ? setModalView('forgot-password') : setModalView('login')}
+                    className="p-1.5 rounded-full hover:bg-white/5 text-gray-400 hover:text-white transition-colors"
+                    aria-label="Go back"
+                  >
+                    <ArrowLeft size={18} />
+                  </button>
+                )}
+                <h2 id="modal-title" className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                  {getModalTitle()}
+                </h2>
+              </div>
               <button 
                 onClick={() => setShowLoginModal(false)}
                 className="text-gray-400 hover:text-white transition-colors p-1 hover:bg-white/5 rounded-full"
@@ -140,96 +192,326 @@ export const Navigation = () => {
               </button>
             </div>
             
-            <form onSubmit={handleLogin} className="space-y-5">
-              <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-400">
-                  Email
-                </label>
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+            <div className="relative overflow-hidden" style={{ minHeight: '320px' }}>
+              {/* Login Form */}
+              <div 
+                className={`transition-all duration-300 absolute inset-0 ${
+                  modalView === 'login' 
+                    ? 'translate-x-0 opacity-100' 
+                    : modalView === 'signup' || modalView === 'forgot-password' || modalView === 'reset-success'
+                      ? '-translate-x-full opacity-0' 
+                      : 'translate-x-full opacity-0'
+                }`}
+              >
+                <form onSubmit={handleLogin} className="space-y-5">
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-400">
+                      Email
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <User size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+                      </div>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        className="block w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                        placeholder="your.email@example.com"
+                        autoComplete="email"
+                      />
+                    </div>
                   </div>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    className="block w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                    placeholder="your.email@example.com"
-                    autoComplete="email"
-                  />
-                </div>
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-400">
+                      Password
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Lock size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+                      </div>
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        id="password"
+                        name="password"
+                        required
+                        className="block w-full pl-10 pr-10 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                        placeholder="••••••••"
+                        autoComplete="current-password"
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                      >
+                        {showPassword ? (
+                          <EyeOff size={16} className="text-gray-500 hover:text-gray-300 transition-colors duration-200" />
+                        ) : (
+                          <Eye size={16} className="text-gray-500 hover:text-gray-300 transition-colors duration-200" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <input
+                        id="remember-me"
+                        name="remember-me"
+                        type="checkbox"
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-700 rounded bg-gray-900"
+                      />
+                      <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-400">
+                        Remember me
+                      </label>
+                    </div>
+                    
+                    <div className="text-sm">
+                      <button 
+                        type="button"
+                        onClick={() => setModalView('forgot-password')}
+                        className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                      >
+                        Forgot password?
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 relative overflow-hidden group"
+                  >
+                    <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full opacity-10 group-hover:w-[600px] group-hover:h-[600px] group-active:bg-white"></span>
+                    <span className="relative">Sign in</span>
+                  </button>
+                  
+                  <div className="mt-6 text-center">
+                    <p className="text-sm text-gray-400">
+                      Don't have an account?{" "}
+                      <button 
+                        type="button"
+                        onClick={() => setModalView('signup')}
+                        className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                      >
+                        Sign up
+                      </button>
+                    </p>
+                  </div>
+                </form>
               </div>
               
-              <div className="space-y-2">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-400">
-                  Password
-                </label>
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+              {/* Signup Form */}
+              <div 
+                className={`transition-all duration-300 absolute inset-0 ${
+                  modalView === 'signup' 
+                    ? 'translate-x-0 opacity-100' 
+                    : modalView === 'login' 
+                      ? 'translate-x-full opacity-0' 
+                      : '-translate-x-full opacity-0'
+                }`}
+              >
+                <form onSubmit={handleSignup} className="space-y-5">
+                  <div className="space-y-2">
+                    <label htmlFor="signup-name" className="block text-sm font-medium text-gray-400">
+                      Full Name
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <User size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+                      </div>
+                      <input
+                        type="text"
+                        id="signup-name"
+                        name="name"
+                        required
+                        className="block w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                        placeholder="John Doe"
+                        autoComplete="name"
+                      />
+                    </div>
                   </div>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    name="password"
-                    required
-                    className="block w-full pl-10 pr-10 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                    placeholder="••••••••"
-                    autoComplete="current-password"
-                  />
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="signup-email" className="block text-sm font-medium text-gray-400">
+                      Email
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Mail size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+                      </div>
+                      <input
+                        type="email"
+                        id="signup-email"
+                        name="email"
+                        required
+                        className="block w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                        placeholder="your.email@example.com"
+                        autoComplete="email"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="signup-password" className="block text-sm font-medium text-gray-400">
+                      Password
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Lock size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+                      </div>
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        id="signup-password"
+                        name="password"
+                        required
+                        className="block w-full pl-10 pr-10 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                        placeholder="••••••••"
+                        autoComplete="new-password"
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                      >
+                        {showPassword ? (
+                          <EyeOff size={16} className="text-gray-500 hover:text-gray-300 transition-colors duration-200" />
+                        ) : (
+                          <Eye size={16} className="text-gray-500 hover:text-gray-300 transition-colors duration-200" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <input
+                      id="terms"
+                      name="terms"
+                      type="checkbox"
+                      required
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-700 rounded bg-gray-900"
+                    />
+                    <label htmlFor="terms" className="ml-2 block text-sm text-gray-400">
+                      I agree to the <a href="#" className="text-blue-400 hover:text-blue-300">Terms of Service</a> and <a href="#" className="text-blue-400 hover:text-blue-300">Privacy Policy</a>
+                    </label>
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 relative overflow-hidden group"
+                  >
+                    <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full opacity-10 group-hover:w-[600px] group-hover:h-[600px] group-active:bg-white"></span>
+                    <span className="relative">Create Account</span>
+                  </button>
+                  
+                  <div className="mt-6 text-center">
+                    <p className="text-sm text-gray-400">
+                      Already have an account?{" "}
+                      <button 
+                        type="button"
+                        onClick={() => setModalView('login')}
+                        className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                      >
+                        Sign in
+                      </button>
+                    </p>
+                  </div>
+                </form>
+              </div>
+              
+              {/* Forgot Password Form */}
+              <div 
+                className={`transition-all duration-300 absolute inset-0 ${
+                  modalView === 'forgot-password' 
+                    ? 'translate-x-0 opacity-100' 
+                    : modalView === 'reset-success' 
+                      ? '-translate-x-full opacity-0' 
+                      : 'translate-x-full opacity-0'
+                }`}
+              >
+                <form onSubmit={handleForgotPassword} className="space-y-5">
+                  <p className="text-gray-400 mb-4">
+                    Enter your email address and we'll send you a link to reset your password.
+                  </p>
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="reset-email" className="block text-sm font-medium text-gray-400">
+                      Email
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Mail size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+                      </div>
+                      <input
+                        type="email"
+                        id="reset-email"
+                        name="email"
+                        required
+                        className="block w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                        placeholder="your.email@example.com"
+                        autoComplete="email"
+                      />
+                    </div>
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 relative overflow-hidden group"
+                  >
+                    <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full opacity-10 group-hover:w-[600px] group-hover:h-[600px] group-active:bg-white"></span>
+                    <span className="relative">Send Reset Link</span>
+                  </button>
+                  
+                  <div className="mt-6 text-center">
+                    <p className="text-sm text-gray-400">
+                      Remember your password?{" "}
+                      <button 
+                        type="button"
+                        onClick={() => setModalView('login')}
+                        className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                      >
+                        Back to login
+                      </button>
+                    </p>
+                  </div>
+                </form>
+              </div>
+              
+              {/* Reset Success Message */}
+              <div 
+                className={`transition-all duration-300 absolute inset-0 ${
+                  modalView === 'reset-success' 
+                    ? 'translate-x-0 opacity-100' 
+                    : modalView === 'forgot-password' 
+                      ? 'translate-x-full opacity-0' 
+                      : '-translate-x-full opacity-0'
+                }`}
+              >
+                <div className="text-center space-y-5">
+                  <div className="mx-auto w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mb-4">
+                    <Check size={32} className="text-green-500" />
+                  </div>
+                  
+                  <h3 className="text-xl font-semibold text-white">Check Your Email</h3>
+                  
+                  <p className="text-gray-400">
+                    We've sent a password reset link to your email address. Please check your inbox and follow the instructions.
+                  </p>
+                  
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    onClick={() => setModalView('login')}
+                    className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 relative overflow-hidden group mt-4"
                   >
-                    {showPassword ? (
-                      <EyeOff size={16} className="text-gray-500 hover:text-gray-300 transition-colors duration-200" />
-                    ) : (
-                      <Eye size={16} className="text-gray-500 hover:text-gray-300 transition-colors duration-200" />
-                    )}
+                    <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full opacity-10 group-hover:w-[600px] group-hover:h-[600px] group-active:bg-white"></span>
+                    <span className="relative">Back to Login</span>
                   </button>
                 </div>
               </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-700 rounded bg-gray-900"
-                  />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-400">
-                    Remember me
-                  </label>
-                </div>
-                
-                <div className="text-sm">
-                  <a href="#" className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200">
-                    Forgot password?
-                  </a>
-                </div>
-              </div>
-              
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 relative overflow-hidden group"
-              >
-                <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full opacity-10 group-hover:w-[600px] group-hover:h-[600px] group-active:bg-white"></span>
-                <span className="relative">Sign in</span>
-              </button>
-              
-              <div className="mt-6 text-center">
-                <p className="text-sm text-gray-400">
-                  Don't have an account?{" "}
-                  <a href="#" className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200">
-                    Sign up
-                  </a>
-                </p>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
