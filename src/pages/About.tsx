@@ -303,15 +303,15 @@ const About = () => {
                     : 'opacity-0 translate-y-16'
                 }`}
               >
-                <div className="relative mb-6 inline-block overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-1 border border-blue-500/20">
+                <div className="relative mb-6 inline-block overflow-hidden rounded-[3rem] bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-1 border border-blue-500/20">
                   <img 
                     src={member.image} 
                     alt={member.name}
-                    className={`w-64 h-64 object-cover mx-auto transition-all duration-700 ${
+                    className={`w-64 h-64 object-cover mx-auto rounded-[2.8rem] transition-all duration-700 ${
                       teamVisible[index] ? 'scale-100' : 'scale-110 blur-sm'
                     } group-hover:scale-105`}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-[3rem]"></div>
                 </div>
                 <h3 className="text-2xl font-bold mb-2 text-white">{member.name}</h3>
                 <p className="text-blue-400 font-medium mb-4">{member.role}</p>
