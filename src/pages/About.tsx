@@ -170,22 +170,22 @@ const About = () => {
 
   const team = [
     {
-      name: 'John Doe',
-      role: 'Founder & Lead Developer',
+      name: 'Abhiram A K',
+      role: 'Developer',
       image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
-      description: 'Full-stack developer with 8+ years of experience in modern web technologies.'
+      description: 'Full-stack developer with expertise in modern web technologies and application development.'
     },
     {
-      name: 'Jane Smith',
-      role: 'UI/UX Designer',
+      name: 'Rojin Roy',
+      role: 'Developer and Designer',
       image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face',
-      description: 'Creative designer passionate about creating intuitive and beautiful user experiences.'
+      description: 'Creative developer and designer passionate about creating intuitive and beautiful user experiences.'
     },
     {
-      name: 'Mike Johnson',
-      role: 'Backend Developer',
+      name: 'Arjun M B',
+      role: 'Marketing Executive',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
-      description: 'Backend specialist focused on scalable architectures and database optimization.'
+      description: 'Strategic marketing specialist focused on digital growth strategies and brand development.'
     },
   ];
 
