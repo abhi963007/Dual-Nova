@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Code } from 'lucide-react';
+import { Menu, X, Code, LogIn, User, Lock, Eye, EyeOff } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useIsMobile } from '../hooks/use-mobile';
 
@@ -7,6 +7,8 @@ export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const location = useLocation();
   const isMobile = useIsMobile();
   const lastScrollY = React.useRef(0);
@@ -45,6 +47,32 @@ export const Navigation = () => {
     };
   }, [isOpen]);
 
+  // Close modal when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const modal = document.getElementById('login-modal');
+      if (modal && !modal.contains(event.target as Node) && showLoginModal) {
+        setShowLoginModal(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showLoginModal]);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showLoginModal) {
+      document.body.style.overflow = 'hidden';
+    } else if (!isOpen) { // Only restore scroll if mobile menu is also closed
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showLoginModal, isOpen]);
+
   const navLinks = [
     { name: 'HOME', href: '/', ariaLabel: 'Navigate to home page' },
     { name: 'ABOUT', href: '/about', ariaLabel: 'Navigate to about page' },
@@ -54,6 +82,14 @@ export const Navigation = () => {
   ];
 
   const isActive = (href: string) => location.pathname === href;
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle login logic here
+    console.log('Login submitted');
+    // Close modal after successful login or validation
+    setShowLoginModal(false);
+  };
 
   return (
     <>
@@ -67,6 +103,136 @@ export const Navigation = () => {
           aria-hidden="true"
         ></div>
       )}
+      
+      {/* Login Modal Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/70 backdrop-blur-md z-50 transition-opacity duration-300 ${
+          showLoginModal ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        aria-hidden={!showLoginModal}
+      ></div>
+      
+      {/* Login Modal */}
+      <div 
+        id="login-modal"
+        className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-6 z-50 transition-all duration-300 ${
+          showLoginModal 
+            ? 'opacity-100 scale-100' 
+            : 'opacity-0 scale-95 pointer-events-none'
+        }`}
+        aria-modal={showLoginModal}
+        aria-labelledby="login-title"
+      >
+        <div className="bg-[#121212] border border-gray-800 rounded-2xl shadow-xl overflow-hidden relative">
+          {/* Background gradient decoration */}
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full blur-xl"></div>
+          <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-purple-500/20 to-blue-600/20 rounded-full blur-xl"></div>
+          
+          <div className="p-6 relative z-10">
+            <div className="flex justify-between items-center mb-6">
+              <h2 id="login-title" className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Login</h2>
+              <button 
+                onClick={() => setShowLoginModal(false)}
+                className="text-gray-400 hover:text-white transition-colors p-1 hover:bg-white/5 rounded-full"
+                aria-label="Close login modal"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleLogin} className="space-y-5">
+              <div className="space-y-2">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-400">
+                  Email
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+                  </div>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    className="block w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="your.email@example.com"
+                    autoComplete="email"
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-400">
+                  Password
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+                  </div>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    required
+                    className="block w-full pl-10 pr-10 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="••••••••"
+                    autoComplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? (
+                      <EyeOff size={16} className="text-gray-500 hover:text-gray-300 transition-colors duration-200" />
+                    ) : (
+                      <Eye size={16} className="text-gray-500 hover:text-gray-300 transition-colors duration-200" />
+                    )}
+                  </button>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-700 rounded bg-gray-900"
+                  />
+                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-400">
+                    Remember me
+                  </label>
+                </div>
+                
+                <div className="text-sm">
+                  <a href="#" className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200">
+                    Forgot password?
+                  </a>
+                </div>
+              </div>
+              
+              <button
+                type="submit"
+                className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 relative overflow-hidden group"
+              >
+                <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full opacity-10 group-hover:w-[600px] group-hover:h-[600px] group-active:bg-white"></span>
+                <span className="relative">Sign in</span>
+              </button>
+              
+              <div className="mt-6 text-center">
+                <p className="text-sm text-gray-400">
+                  Don't have an account?{" "}
+                  <a href="#" className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200">
+                    Sign up
+                  </a>
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     
       <nav 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
@@ -118,6 +284,17 @@ export const Navigation = () => {
                   }`}></span>
                 </Link>
               ))}
+              
+              {/* Login Button for Desktop */}
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="ml-4 flex items-center gap-2 px-5 py-2 text-sm font-semibold tracking-wider text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-full hover:from-blue-600 hover:to-purple-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#121212] relative overflow-hidden group shadow-lg shadow-blue-500/20"
+                aria-label="Login to your account"
+              >
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <LogIn size={16} className="relative z-10 group-hover:translate-x-0.5 transition-transform duration-300" />
+                <span className="relative z-10">LOGIN</span>
+              </button>
             </div>
 
             {/* Mobile menu button - positioned to avoid badge overlap */}
@@ -169,6 +346,22 @@ export const Navigation = () => {
                     </div>
                   </Link>
                 ))}
+                
+                {/* Login Button for Mobile */}
+                <div className="px-4 py-3">
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      setShowLoginModal(true);
+                    }}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold tracking-wider text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-blue-500/20"
+                    aria-label="Login to your account"
+                  >
+                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                    <LogIn size={16} className="relative z-10 group-hover:translate-x-0.5 transition-transform duration-300" />
+                    <span className="relative z-10">LOGIN</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
