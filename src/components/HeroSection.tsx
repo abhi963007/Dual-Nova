@@ -42,19 +42,6 @@ export const HeroSection = () => {
   const handleProjectsClick = () => {
     navigate('/projects');
   };
-  
-  // Handle scroll down click
-  const handleScrollClick = () => {
-    const introSection = document.querySelector('#intro-section');
-    if (introSection) {
-      introSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      window.scrollTo({
-        top: window.innerHeight,
-        behavior: 'smooth'
-      });
-    }
-  };
 
   return (
     <header className="min-h-screen flex flex-col justify-center items-center relative pt-16 px-4 sm:px-6 bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#121212] overflow-hidden">
@@ -149,7 +136,7 @@ export const HeroSection = () => {
         </div>
       </div>
 
-      {/* Location and Scroll Down Container - Mobile Optimized */}
+      {/* Location and Info Container - Mobile Optimized */}
       {isMobile ? (
         <>
           {/* Location Badge - Mobile Design - Left positioned */}
@@ -164,22 +151,6 @@ export const HeroSection = () => {
                 <span className="text-xs text-gray-400">Location</span>
                 <span className="text-base font-bold text-white">Kochi, Kerala</span>
               </div>
-            </div>
-          </div>
-          
-          {/* Scroll Indicator - Centered and below location badge */}
-          <div 
-            onClick={handleScrollClick}
-            className="absolute bottom-6 left-0 w-full flex justify-center z-20"
-          >
-            <div className={`flex flex-col items-center transition-opacity duration-1000 delay-1000 cursor-pointer ${
-              isVisible ? 'opacity-100' : 'opacity-0'
-            }`}>
-              <div className="w-6 h-10 border-2 border-blue-500/40 rounded-full flex justify-center relative overflow-hidden bg-black/50">
-                <div className="absolute inset-0 bg-blue-900/10 backdrop-blur-sm"></div>
-                <div className="w-1 h-3 bg-gradient-to-b from-blue-400 to-transparent rounded-full mt-2 animate-bounce relative z-10"></div>
-              </div>
-              <p className="text-xs text-blue-300 mt-1 text-center font-medium">Scroll Down</p>
             </div>
           </div>
         </>
@@ -222,21 +193,6 @@ export const HeroSection = () => {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Scroll Indicator - For Desktop Only */}
-          <div 
-            onClick={handleScrollClick}
-            className="absolute bottom-24 w-full flex justify-center items-center z-20"
-          >
-            <div className={`flex flex-col items-center transition-opacity duration-1000 delay-1000 cursor-pointer ${
-              isVisible ? 'opacity-100' : 'opacity-0'
-            }`}>
-              <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center hover:border-blue-400 transition-colors duration-300">
-                <div className="w-1 h-3 bg-gradient-to-b from-blue-400 to-transparent rounded-full mt-2 animate-bounce"></div>
-              </div>
-              <p className="text-xs text-gray-400 mt-2 text-center">Scroll Down</p>
             </div>
           </div>
         </>
