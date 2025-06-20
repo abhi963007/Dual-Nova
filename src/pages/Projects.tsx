@@ -7,7 +7,7 @@ import { ExternalLink, Github, Calendar, Tag } from 'lucide-react';
 const Projects = () => {
   const [activeFilter, setActiveFilter] = useState('All');
 
-  const filters = ['All', 'Web Development', 'Mobile App', 'E-commerce', 'SaaS'];
+  const filters = ['All', 'Web Development', 'Mobile App', 'E-commerce', 'SaaS', 'AI/ML', 'Computer Vision', 'Healthcare', 'Security'];
 
   const projects = [
     {
@@ -70,6 +70,236 @@ const Projects = () => {
       githubUrl: '#',
       date: '2022'
     },
+    {
+      title: 'Brain Tumor Detection',
+      category: 'AI/ML',
+      description: 'Deep learning system for automated brain tumor detection and classification using convolutional neural networks with an accuracy of 97.6%.',
+      image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&h=400&fit=crop',
+      technologies: ['Python', 'TensorFlow', 'CNN', 'OpenCV'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Oct 2024'
+    },
+    {
+      title: 'Fooocus',
+      category: 'AI/ML',
+      description: 'An AI image generation tool based on Stable Diffusion with an intuitive interface for creating high-quality images from text prompts.',
+      image: 'https://images.unsplash.com/photo-1547954575-855750c57bd3?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Stable Diffusion'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Dec 2024 – Jan 2025'
+    },
+    {
+      title: 'AI Greeting Portal',
+      category: 'AI/ML',
+      description: 'Automated personalized greetings using AI to recognize visitors and generate contextual welcome messages.',
+      image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=400&fit=crop',
+      technologies: ['Python', 'AI', 'NLP'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'Heart Disease Predictor',
+      category: 'Healthcare',
+      description: 'Machine learning system for assessing cardiovascular risk factors and predicting potential heart disease.',
+      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Machine Learning', 'Healthcare'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'MONEY MAGNET',
+      category: 'AI/ML',
+      description: 'AI and ML-based system for managing personal finances and making intelligent financial decisions.',
+      image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop',
+      technologies: ['AI', 'Machine Learning', 'Finance'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'GradeAI',
+      category: 'AI/ML',
+      description: 'An intelligent assessment system for evaluating student performance and progress using ML techniques.',
+      image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Machine Learning', 'Education'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'arChat',
+      category: 'Web Development',
+      description: 'Web-based chat application with AI capabilities for intelligent conversation and assistance.',
+      image: 'https://images.unsplash.com/photo-1577563908411-5077b6dc7624?w=600&h=400&fit=crop',
+      technologies: ['JavaScript', 'AI', 'Web'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'SecureURL Defender',
+      category: 'Security',
+      description: 'ML-powered tool for defending against malicious URLs and phishing attacks.',
+      image: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=600&h=400&fit=crop',
+      technologies: ['AI', 'Machine Learning', 'Security'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'Used Car Price Prediction',
+      category: 'AI/ML',
+      description: 'Car price prediction system using ML regression models.',
+      image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Machine Learning', 'Data Science'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'Vehicle Detection and Analysis',
+      category: 'Computer Vision',
+      description: 'Detecting and analyzing vehicles using AI-based image processing.',
+      image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Computer Vision', 'OpenCV'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'Fake Currency Detection',
+      category: 'Security',
+      description: 'Deep learning system to detect fake currency using image processing and neural networks.',
+      image: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=600&h=400&fit=crop',
+      technologies: ['Deep Learning', 'Computer Vision', 'Security'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'Detecting AI-Generated Fake Images',
+      category: 'Computer Vision',
+      description: 'Detecting fake AI-generated images using advanced algorithms.',
+      image: 'https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Deep Learning', 'Computer Vision'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'Network Intrusion Detection',
+      category: 'Security',
+      description: 'ML-powered system to detect intrusions and unauthorized access in real-time.',
+      image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Machine Learning', 'Network Security'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'Multiple Disease Prediction',
+      category: 'Healthcare',
+      description: 'Predicting multiple diseases based on symptoms and medical data.',
+      image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Machine Learning', 'Healthcare'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'Credit Card Fraud Detection',
+      category: 'Security',
+      description: 'Flask-based app to detect and prevent credit card fraud in real-time.',
+      image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Flask', 'Machine Learning'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'Underwater Waste Detection',
+      category: 'Computer Vision',
+      description: 'Detecting and tracking underwater waste using AI for ocean cleanup and protection.',
+      image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop',
+      technologies: ['Computer Vision', 'AI', 'Environmental'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'Advanced Image Denoising',
+      category: 'Computer Vision',
+      description: 'Denoising grayscale and color images using deep learning for clarity enhancement.',
+      image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=600&h=400&fit=crop',
+      technologies: ['Deep Learning', 'Image Processing', 'Python'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'Heart Attack Prediction',
+      category: 'Healthcare',
+      description: 'Predicting heart attack risks using ML on patient data.',
+      image: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=400&fit=crop',
+      technologies: ['Machine Learning', 'Healthcare', 'Data Analysis'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Sep 2024 – Apr 2025'
+    },
+    {
+      title: 'Heart Disease Prediction',
+      category: 'Healthcare',
+      description: 'Diagnosing heart disease using patient data and advanced ML algorithms.',
+      image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Machine Learning', 'Healthcare', 'Flask'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Oct 2024 – Dec 2024'
+    },
+    {
+      title: 'Retinal Vessel Segmentation',
+      category: 'Healthcare',
+      description: 'AI-based segmentation of retinal vessels for medical image analysis.',
+      image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Deep Learning', 'Computer Vision', 'Medical Imaging'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Nov 2024 – Jan 2025'
+    },
+    {
+      title: 'Insurance Prediction System',
+      category: 'AI/ML',
+      description: 'Predicting insurance premiums using regression models and statistical analysis.',
+      image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Machine Learning', 'Data Analysis', 'Finance'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Dec 2024 – Feb 2025'
+    },
+    {
+      title: 'Blood Group Detection',
+      category: 'Healthcare',
+      description: 'Identifying blood groups using ML and CV from image input.',
+      image: 'https://images.unsplash.com/photo-1615461066159-fea0960485d5?w=600&h=400&fit=crop',
+      technologies: ['Python', 'Computer Vision', 'OpenCV', 'Machine Learning'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Oct 2024 – Jan 2025'
+    },
+    {
+      title: 'MCA Department Chatbot',
+      category: 'AI/ML',
+      description: 'Chatbot for assisting MCA department queries and providing instant responses.',
+      image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=600&h=400&fit=crop',
+      technologies: ['Python', 'NLP', 'Chatbot', 'Education'],
+      liveUrl: '#',
+      githubUrl: '#',
+      date: 'Jan 2025 – Feb 2025'
+    }
   ];
 
   const filteredProjects = activeFilter === 'All' 
