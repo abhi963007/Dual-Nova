@@ -20,7 +20,7 @@ function extendMaterial(BaseMaterial, cfg) {
     fragmentShader: baseFrag,
     uniforms: baseUniforms,
   } = physical;
-  const baseDefines = physical.defines ?? {};
+  const baseDefines = physical.defines || {};
 
   const uniforms = THREE.UniformsUtils.clone(baseUniforms);
 
@@ -381,4 +381,4 @@ const DirLight = ({
   );
 };
 
-export default Beams; 
+export default Beams;
