@@ -303,11 +303,11 @@ const About = () => {
                     : 'opacity-0 translate-y-16'
                 }`}
               >
-                <div className="relative mb-6 inline-block overflow-hidden rounded-2xl">
+                <div className="relative mb-6 inline-block overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-1 border border-blue-500/20">
                   <img 
                     src={member.image} 
                     alt={member.name}
-                    className={`w-48 h-48 object-cover mx-auto transition-all duration-700 ${
+                    className={`w-64 h-64 object-cover mx-auto transition-all duration-700 ${
                       teamVisible[index] ? 'scale-100' : 'scale-110 blur-sm'
                     } group-hover:scale-105`}
                   />
