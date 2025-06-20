@@ -1,3 +1,4 @@
+
 /* eslint-disable react/no-unknown-property */
 import {
   forwardRef,
@@ -20,7 +21,7 @@ function extendMaterial(BaseMaterial, cfg) {
     fragmentShader: baseFrag,
     uniforms: baseUniforms,
   } = physical;
-  const baseDefines = physical.defines || {};
+  const baseDefines = {};
 
   const uniforms = THREE.UniformsUtils.clone(baseUniforms);
 
