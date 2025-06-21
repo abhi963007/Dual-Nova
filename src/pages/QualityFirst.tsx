@@ -3,6 +3,7 @@ import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { CheckCircle, Code, FileCode, Shield, Zap, Award } from 'lucide-react';
 import { useIsMobile } from '../hooks/use-mobile';
+import { Link } from 'react-router-dom';
 
 const QualityFirst = () => {
   const isMobile = useIsMobile();
@@ -231,18 +232,18 @@ const QualityFirst = () => {
             Ready to work with a team that prioritizes quality in every aspect of your project? Let's create something exceptional together.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-            <a 
-              href="/contact" 
+            <Link 
+              to="/contact" 
               className="px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
             >
               Get in Touch
-            </a>
-            <a 
-              href="/services" 
+            </Link>
+            <Link 
+              to="/services" 
               className="px-8 py-3 sm:py-4 bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm border border-gray-700/50 text-white font-medium rounded-full hover:bg-gray-800/60 hover:border-gray-600/60 transition-all duration-300"
             >
               Explore Our Services
-            </a>
+            </Link>
           </div>
         </div>
       </section>

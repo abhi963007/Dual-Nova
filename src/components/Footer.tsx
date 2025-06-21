@@ -1,5 +1,6 @@
 import React from 'react';
 import { Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useIsMobile } from '../hooks/use-mobile';
 
 export const Footer = () => {
@@ -36,13 +37,13 @@ export const Footer = () => {
             {/* Quick Links */}
             <div className="flex flex-wrap justify-center gap-4">
               {quickLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
             </div>
 
@@ -107,12 +108,12 @@ export const Footer = () => {
               <ul className="space-y-2">
                 {quickLinks.map((link) => (
                   <li key={link.name}>
-                    <a
-                      href={link.href}
+                    <Link
+                      to={link.href}
                       className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
                     >
                       {link.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

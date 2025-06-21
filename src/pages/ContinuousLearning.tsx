@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
+import { Link } from 'react-router-dom';
 import { BookOpen, GraduationCap, Lightbulb, Share2, Rocket, Brain } from 'lucide-react';
 import { useIsMobile } from '../hooks/use-mobile';
 
@@ -266,18 +267,18 @@ const ContinuousLearning = () => {
             Partner with a team that's always evolving and bringing the latest innovations to your projects.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-            <a 
-              href="/contact" 
+            <Link 
+              to="/contact" 
               className="px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25"
             >
               Work With Us
-            </a>
-            <a 
-              href="/services" 
+            </Link>
+            <Link 
+              to="/services" 
               className="px-8 py-3 sm:py-4 bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm border border-gray-700/50 text-white font-medium rounded-full hover:bg-gray-800/60 hover:border-gray-600/60 transition-all duration-300"
             >
               Explore Our Services
-            </a>
+            </Link>
           </div>
         </div>
       </section>

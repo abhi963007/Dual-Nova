@@ -293,18 +293,18 @@ const Services = () => {
             Let's discuss your project requirements and create a solution that drives growth.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="/contact"
+            <Link 
+              to="/contact"
               className="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300"
             >
               Get Started
-            </a>
-            <a 
-              href="/projects"
+            </Link>
+            <Link 
+              to="/projects"
               className="inline-block bg-transparent border-2 border-blue-500 text-blue-400 px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-500 hover:text-white transition-all duration-300"
             >
               View Our Work
-            </a>
+            </Link>
           </div>
         </div>
       </section>

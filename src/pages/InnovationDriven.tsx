@@ -3,6 +3,7 @@ import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { Lightbulb, Sparkles, Zap, Atom, Wand2, Gauge } from 'lucide-react';
 import { useIsMobile } from '../hooks/use-mobile';
+import { Link } from 'react-router-dom';
 
 const InnovationDriven = () => {
   const isMobile = useIsMobile();
@@ -285,18 +286,18 @@ const InnovationDriven = () => {
             Partner with us to transform your challenges into innovative, impactful solutions.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-            <a 
-              href="/contact" 
+            <Link 
+              to="/contact" 
               className="px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/25"
             >
               Discuss Your Project
-            </a>
-            <a 
-              href="/projects" 
+            </Link>
+            <Link 
+              to="/projects" 
               className="px-8 py-3 sm:py-4 bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm border border-gray-700/50 text-white font-medium rounded-full hover:bg-gray-800/60 hover:border-gray-600/60 transition-all duration-300"
             >
               See Our Work
-            </a>
+            </Link>
           </div>
         </div>
       </section>

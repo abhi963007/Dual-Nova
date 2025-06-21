@@ -13,6 +13,19 @@ import Analytics from './pages/Analytics';
 import Team from './pages/Team';
 import Settings from './pages/Settings';
 import OurStory from './pages/OurStory';
+import WebDevelopment from './pages/WebDevelopment';
+import MobileDevelopment from './pages/MobileDevelopment';
+import FullStackSolutions from './pages/FullStackSolutions';
+import ApiDevelopment from './pages/ApiDevelopment';
+import UiUxDesign from './pages/UiUxDesign';
+import PerformanceOptimization from './pages/PerformanceOptimization';
+import InnovationDriven from './pages/InnovationDriven';
+import ContinuousLearning from './pages/ContinuousLearning';
+import ClientPartnership from './pages/ClientPartnership';
+import QualityFirst from './pages/QualityFirst';
+import Tasks from './pages/Tasks';
+import Reports from './pages/Reports';
+import Chat from './pages/Chat';
 
 function App() {
   return (
@@ -30,6 +43,24 @@ function App() {
           <Route path="/team" element={<Team />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/our-story" element={<OurStory />} />
+          
+          {/* Individual Service Pages */}
+          <Route path="/services/web-development" element={<WebDevelopment />} />
+          <Route path="/services/mobile-development" element={<MobileDevelopment />} />
+          <Route path="/services/full-stack-solutions" element={<FullStackSolutions />} />
+          <Route path="/services/api-development" element={<ApiDevelopment />} />
+          <Route path="/services/ui-ux-design" element={<UiUxDesign />} />
+          <Route path="/services/performance-optimization" element={<PerformanceOptimization />} />
+          
+          {/* Additional Pages */}
+          <Route path="/innovation-driven" element={<InnovationDriven />} />
+          <Route path="/continuous-learning" element={<ContinuousLearning />} />
+          <Route path="/client-partnership" element={<ClientPartnership />} />
+          <Route path="/quality-first" element={<QualityFirst />} />
+          <Route path="/tasks" element={<Tasks />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/chat" element={<Chat />} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

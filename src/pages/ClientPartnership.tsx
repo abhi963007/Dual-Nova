@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
+import { Link } from 'react-router-dom';
 import { Users, MessageSquare, Handshake, Clock, BarChart, HeartHandshake } from 'lucide-react';
 import { useIsMobile } from '../hooks/use-mobile';
 
@@ -295,18 +296,18 @@ const ClientPartnership = () => {
             Ready to experience a different kind of client relationship? Let's start building something amazing together.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-            <a 
-              href="/contact" 
+            <Link 
+              to="/contact" 
               className="px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25"
             >
               Start a Conversation
-            </a>
-            <a 
-              href="/our-story" 
+            </Link>
+            <Link 
+              to="/our-story" 
               className="px-8 py-3 sm:py-4 bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm border border-gray-700/50 text-white font-medium rounded-full hover:bg-gray-800/60 hover:border-gray-600/60 transition-all duration-300"
             >
               Learn About Our Team
-            </a>
+            </Link>
           </div>
         </div>
       </section>
