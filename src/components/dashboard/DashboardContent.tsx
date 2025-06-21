@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Search, Menu, Star, Calendar } from 'lucide-react';
 import { NameCard } from './NameCard';
 import { StatsGraph } from './StatsGraph';
@@ -7,9 +6,18 @@ import { TopCountries } from './TopCountries';
 import { Segmentation } from './Segmentation';
 import { Satisfaction } from './Satisfaction';
 import { AddComponent } from './AddComponent';
+import { ProjectList } from './ProjectList';
 
 interface ContentProps {
   onSidebarShow: () => void;
+}
+
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  createdAt: string;
 }
 
 const employeeData = [
@@ -43,6 +51,19 @@ const employeeData = [
 ];
 
 export const DashboardContent: React.FC<ContentProps> = ({ onSidebarShow }) => {
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  const handleProjectCreate = (projectData: { name: string; description: string; type: string }) => {
+    const newProject: Project = {
+      id: Date.now().toString(),
+      name: projectData.name,
+      description: projectData.description,
+      type: projectData.type,
+      createdAt: new Date().toLocaleDateString()
+    };
+    setProjects(prev => [newProject, ...prev]);
+  };
+
   return (
     <div className="flex w-full">
       <div className="w-full h-screen hidden sm:block sm:w-20 xl:w-60 flex-shrink-0">
@@ -90,6 +111,9 @@ export const DashboardContent: React.FC<ContentProps> = ({ onSidebarShow }) => {
           />
         ))}
 
+        {/* Show projects list if there are projects */}
+        {projects.length > 0 && <ProjectList projects={projects} />}
+
         <div className="w-full p-2 lg:w-2/3">
           <div className="rounded-lg bg-[#171717] h-80">
             <StatsGraph />
@@ -113,7 +137,7 @@ export const DashboardContent: React.FC<ContentProps> = ({ onSidebarShow }) => {
         </div>
         <div className="w-full p-2 lg:w-1/3">
           <div className="rounded-lg bg-[#171717] overflow-hidden h-80">
-            <AddComponent />
+            <AddComponent onProjectCreate={handleProjectCreate} />
           </div>
         </div>
       </div>
