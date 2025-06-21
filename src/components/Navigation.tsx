@@ -110,11 +110,24 @@ export const Navigation = () => {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
 
-      // ensure profile row exists (no-op if already there)
-      await supabase.from('admin_users').upsert({ id: data.user.id });
+      // fetch admin flag
+      const { data: profile } = await supabase
+        .from('admin_users')
+        .select('is_admin')
+        .eq('id', data.user.id)
+        .single();
+
+      // make sure profile exists
+      if (!profile) {
+        await supabase.from('admin_users').upsert({ id: data.user.id, is_admin: false });
+      }
 
       setShowLoginModal(false);
-      navigate('/dashboard');
+      if (profile?.is_admin) {
+        navigate('/dashboard');
+      } else {
+        navigate('/');
+      }
     } catch (err: any) {
       alert(err.message || 'Login failed');
     }
@@ -138,7 +151,7 @@ export const Navigation = () => {
       // user may need to confirm email – warn politely
       if (data.session && data.user) {
         // email auto-confirmed, we are logged in
-        await supabase.from('admin_users').upsert({ id: data.user.id, full_name: fullName });
+        await supabase.from('admin_users').upsert({ id: data.user.id, full_name: fullName, is_admin: false });
         setShowLoginModal(false);
         navigate('/dashboard');
         return;
