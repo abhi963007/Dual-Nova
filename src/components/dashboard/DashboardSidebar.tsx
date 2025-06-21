@@ -163,7 +163,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
         </div>
 
         <div className="flex-grow overflow-y-auto">
-          {sidebarItems(isSuperAdmin, adminCount).map((group, groupIndex) => (
+          {sidebarItems(isSuperAdmin, adminCount, overviewCount).map((group, groupIndex) => (
             <div key={groupIndex} className="px-4">
               {groupIndex === 1 && (
                 <hr className="border-t border-[#2e2e2e] w-full my-4 px-4 sm:hidden xl:block" />
