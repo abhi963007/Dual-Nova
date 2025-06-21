@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Navigation } from '../components/Navigation';
+import { supabase } from '../lib/supabaseClient';
 import { Footer } from '../components/Footer';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle } from 'lucide-react';
 
@@ -60,10 +61,26 @@ const Contact = () => {
     '$50,000+'
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    setIsSubmitted(true);
+    try {
+      const { error } = await supabase.from('enquiries').insert([
+        {
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          service: formData.service,
+          budget: formData.budget,
+          message: formData.message,
+        },
+      ]);
+      if (error) throw error;
+      setIsSubmitted(true);
+      setFormData({ name: '', email: '', company: '', service: '', budget: '', message: '' });
+    } catch (err) {
+      alert('Failed to send enquiry. Please try again later.');
+      console.error(err);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
