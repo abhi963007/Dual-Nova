@@ -656,11 +656,10 @@ export const Navigation = () => {
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {link.name}
-                  <span className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 group-hover:w-1/2 ${
-                  }`}></span>
+                  <span className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 ${isActive(link.href) ? 'w-1/2' : 'w-0'} group-hover:w-1/2`}></span>
                 </Link>
               ))}
-　　 　 　 　 {/* Auth Button for Desktop */}
+              {/* Auth Button for Desktop */}
               {session ? (
                 <>
                   {isAdmin && (
@@ -694,11 +693,23 @@ export const Navigation = () => {
             {/* Mobile menu button - positioned to avoid badge overlap */}
             <div className="md:hidden">
               <button
-{{ ... }
-                      <span>{link.name}</span>
-                    </div>
-                  </Link>
-                ))}
+                onClick={() => setIsOpen(!isOpen)}
+                className="relative overflow-hidden w-10 h-10 flex items-center justify-center text-white bg-transparent rounded-lg hover:bg-white/5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#121212] z-50"
+                aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isOpen}
+              >
+                <div className="relative">
+                  <Menu
+                    size={20}
+                    className={`transition-all duration-300 ${isOpen ? 'opacity-0 rotate-180 scale-0' : 'opacity-100 rotate-0 scale-100'}`}
+                  />
+                  <X
+                    size={20}
+                    className={`absolute top-0 left-0 transition-all duration-300 ${isOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-180 scale-0'}`}
+                  />
+                </div>
+              </button>
+            </div>
                 
                 {/* Auth Button for Mobile */}
                 <div className="px-4 py-3">
@@ -734,6 +745,7 @@ export const Navigation = () => {
             </div>
           </div>
         </div>
+      </nav>
     </>
   );
 };
