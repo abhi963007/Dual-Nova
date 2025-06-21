@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import Index from './pages/Index';
 import About from './pages/About';
 import Projects from './pages/Projects';
@@ -30,9 +31,21 @@ import Tasks from './pages/Tasks';
 import Reports from './pages/Reports';
 import Chat from './pages/Chat';
 
+// ScrollToTop component that will reset scroll position on page navigation
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="App">
         <Routes>
           <Route path="/" element={<Index />} />

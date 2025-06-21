@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { Navigation } from './Navigation';
 import { Footer } from './Footer';
 import { ArrowLeft, ChevronRight, Check } from 'lucide-react';
@@ -33,6 +33,11 @@ export const ServiceDetailLayout = ({
   faq,
   relatedServices,
 }: ServiceDetailProps) => {
+  // Ensure the page scrolls to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#121212] text-white font-outfit">
       <Navigation />
