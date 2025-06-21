@@ -202,22 +202,27 @@ export const DashboardContent: React.FC<ContentProps> = ({ onSidebarShow }) => {
         {/* Show projects list if there are projects */}
         {projects.length > 0 && <ProjectList projects={projects} />}
 
-        <div className="w-full p-2 lg:w-2/3">
+        <div className="w-full p-2">
           <div className="rounded-lg bg-[#171717] h-80">
             <StatsGraph />
           </div>
         </div>
 
+        {/* Project Types Segmentation */}
         <div className="w-full p-2 lg:w-1/3">
           <div className="rounded-lg bg-[#171717] h-80">
             <Segmentation />
           </div>
         </div>
+
+        {/* Customer Satisfaction */}
         <div className="w-full p-2 lg:w-1/3">
           <div className="rounded-lg bg-[#171717] h-80">
             <Satisfaction />
           </div>
         </div>
+
+        {/* Add Project CTA */}
         <div className="w-full p-2 lg:w-1/3">
           <div className="rounded-lg bg-[#171717] overflow-hidden h-80">
             <AddComponent onProjectCreate={handleProjectCreate} />
