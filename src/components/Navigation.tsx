@@ -188,10 +188,18 @@ export const Navigation = () => {
     const fullName = String(formData.get('name'));
 
     try {
+      // Get the current site URL for redirect
+      const redirectUrl = import.meta.env.PROD ? 
+        (import.meta.env.VITE_SITE_URL || window.location.origin) : 
+        window.location.origin;
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { full_name: fullName } }
+        options: { 
+          data: { full_name: fullName },
+          emailRedirectTo: redirectUrl
+        }
       });
       if (error) throw error;
 
@@ -213,10 +221,33 @@ export const Navigation = () => {
 
   const handleForgotPassword = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle forgot password logic here
-    console.log('Forgot password submitted');
-    // Show success message
-    setModalView('reset-success');
+    
+    // Get form data
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const email = String(formData.get('email'));
+
+    if (!email) {
+      alert("Please enter your email address");
+      return;
+    }
+
+    // Get the current site URL for redirect
+    const redirectUrl = import.meta.env.PROD ? 
+      (import.meta.env.VITE_SITE_URL || window.location.origin) : 
+      window.location.origin;
+
+    // Send password reset email
+    supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: redirectUrl,
+    }).then(({ data, error }) => {
+      if (error) {
+        alert(error.message);
+        return;
+      }
+      
+      // Show success message
+      setModalView('reset-success');
+    });
   };
 
   // Modal title based on current view
