@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
@@ -10,10 +9,8 @@ import NotFound from './pages/NotFound';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Overview from './pages/Overview';
-
+import Analytics from './pages/Analytics';
 import Team from './pages/Team';
-
-
 import Settings from './pages/Settings';
 
 function App() {
@@ -28,12 +25,9 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/overview" element={<Overview />} />
-          
+          <Route path="/analytics" element={<Analytics />} />
           <Route path="/team" element={<Team />} />
-          
-          
           <Route path="/settings" element={<Settings />} />
-          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
