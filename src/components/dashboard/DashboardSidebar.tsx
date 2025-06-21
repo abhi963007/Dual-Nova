@@ -1,6 +1,8 @@
+
 import React, { useState } from 'react';
 import { X, User, MessageCircle, Users, Calendar, FileText, Settings, Code } from 'lucide-react';
 import { useSpring, animated, config } from '@react-spring/web';
+import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 
 interface SidebarProps {
@@ -13,24 +15,25 @@ interface SidebarItem {
   title: string;
   icon: string;
   notifications: number | false;
+  href: string;
 }
 
 const sidebarItems: SidebarItem[][] = [
   [
-    { id: '0', title: 'Dashboard', icon: 'dashboard', notifications: false },
-    { id: '1', title: 'Overview', icon: 'overview', notifications: false },
-    { id: '2', title: 'Chat', icon: 'chat', notifications: 6 },
-    { id: '3', title: 'Team', icon: 'team', notifications: false },
+    { id: '0', title: 'Dashboard', icon: 'dashboard', notifications: false, href: '/dashboard' },
+    { id: '1', title: 'Overview', icon: 'overview', notifications: false, href: '/overview' },
+    { id: '2', title: 'Chat', icon: 'chat', notifications: 6, href: '/chat' },
+    { id: '3', title: 'Team', icon: 'team', notifications: false, href: '/team' },
   ],
   [
-    { id: '4', title: 'Tasks', icon: 'tasks', notifications: false },
-    { id: '5', title: 'Reports', icon: 'reports', notifications: false },
-    { id: '6', title: 'Settings', icon: 'settings', notifications: false },
+    { id: '4', title: 'Tasks', icon: 'tasks', notifications: false, href: '/tasks' },
+    { id: '5', title: 'Reports', icon: 'reports', notifications: false, href: '/reports' },
+    { id: '6', title: 'Settings', icon: 'settings', notifications: false, href: '/settings' },
   ],
 ];
 
 export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSidebar }) => {
-  const [selected, setSelected] = useState('0');
+  const location = useLocation();
   
   const { dashOffset, indicatorWidth, percentage } = useSpring({
     dashOffset: 26.015,
@@ -39,6 +42,8 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
     from: { dashOffset: 113.113, indicatorWidth: 0, percentage: 0 },
     config: config.molasses,
   });
+
+  const isActive = (href: string) => location.pathname === href;
 
   return (
     <div
@@ -50,9 +55,9 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
       {/* Header */}
       <div className="flex-shrink-0 overflow-hidden p-2">
         <div className="flex items-center h-full sm:justify-center xl:justify-start p-2 border-b border-[#2e2e2e]">
-          <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
+          <Link to="/" className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
             <Code size={20} className="text-white" />
-          </div>
+          </Link>
           <div className="block sm:hidden xl:block ml-2 font-bold text-xl text-white">
             DUAL NOVA
           </div>
@@ -87,8 +92,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
           <MenuItem
             key={item.id}
             item={item}
-            onClick={setSelected}
-            selected={selected}
+            isActive={isActive(item.href)}
           />
         ))}
 
@@ -102,8 +106,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
           <MenuItem
             key={item.id}
             item={item}
-            onClick={setSelected}
-            selected={selected}
+            isActive={isActive(item.href)}
           />
         ))}
 
@@ -151,11 +154,10 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
 
 interface MenuItemProps {
   item: SidebarItem;
-  onClick: (id: string) => void;
-  selected: string;
+  isActive: boolean;
 }
 
-const MenuItem: React.FC<MenuItemProps> = ({ item, onClick, selected }) => {
+const MenuItem: React.FC<MenuItemProps> = ({ item, isActive }) => {
   const getIcon = (iconName: string) => {
     const iconMap = {
       dashboard: Code,
@@ -171,14 +173,14 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onClick, selected }) => {
   };
 
   return (
-    <div
+    <Link
+      to={item.href}
       className={clsx(
         'w-full mt-6 flex items-center px-3 sm:px-0 xl:px-3 justify-start sm:justify-center xl:justify-start sm:mt-6 xl:mt-3 cursor-pointer transition-colors duration-200',
-        selected === item.id 
+        isActive 
           ? 'text-white border-r-2 border-white' 
           : 'text-gray-400 hover:text-gray-300 border-r-2 border-transparent',
       )}
-      onClick={() => onClick(item.id)}
     >
       <div className="w-5 h-5 flex items-center justify-center">
         {getIcon(item.icon)}
@@ -190,6 +192,6 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onClick, selected }) => {
           <div className="text-white text-xs">{item.notifications}</div>
         </div>
       )}
-    </div>
+    </Link>
   );
 };

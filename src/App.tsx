@@ -1,113 +1,68 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Index from './pages/Index';
+import About from './pages/About';
+import Projects from './pages/Projects';
+import Services from './pages/Services';
+import Contact from './pages/Contact';
+import NotFound from './pages/NotFound';
+import Dashboard from './pages/Dashboard';
+import WebDevelopment from './pages/services/WebDevelopment';
+import MobileDevelopment from './pages/services/MobileDevelopment';
+import UiUxDesign from './pages/services/UiUxDesign';
+import ApiDevelopment from './pages/services/ApiDevelopment';
+import PerformanceOptimization from './pages/services/PerformanceOptimization';
+import FullStackSolutions from './pages/services/FullStackSolutions';
+import OurStory from './pages/about/OurStory';
+import InnovationDriven from './pages/about/InnovationDriven';
+import QualityFirst from './pages/about/QualityFirst';
+import ClientPartnership from './pages/about/ClientPartnership';
+import ContinuousLearning from './pages/about/ContinuousLearning';
+import Overview from './pages/Overview';
+import Chat from './pages/Chat';
+import Team from './pages/Team';
+import Tasks from './pages/Tasks';
+import Reports from './pages/Reports';
+import Settings from './pages/Settings';
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from "react-router-dom";
-import { useEffect, useState, Suspense } from "react";
-import Loader from "./components/Loader";
-import Index from "./pages/Index";
-import About from "./pages/About";
-import Projects from "./pages/Projects";
-import Services from "./pages/Services";
-import Contact from "./pages/Contact";
-import OurStory from "./pages/OurStory";
-import NotFound from "./pages/NotFound";
-import Dashboard from "./pages/Dashboard";
-
-// Service detail pages
-import WebDevelopment from "./pages/WebDevelopment";
-import MobileDevelopment from "./pages/MobileDevelopment";
-import FullStackSolutions from "./pages/FullStackSolutions";
-import ApiDevelopment from "./pages/ApiDevelopment";
-import UiUxDesign from "./pages/UiUxDesign";
-import PerformanceOptimization from "./pages/PerformanceOptimization";
-
-// Core value pages
-import QualityFirst from "./pages/QualityFirst";
-import ClientPartnership from "./pages/ClientPartnership";
-import ContinuousLearning from "./pages/ContinuousLearning";
-import InnovationDriven from "./pages/InnovationDriven";
-
-// Scroll to top on route change
-function ScrollToTopAndLoader() {
-  const { pathname } = useLocation();
-  const navigationType = useNavigationType();
-  const [isLoading, setIsLoading] = useState(true);
-  
-  useEffect(() => {
-    // Scroll to top
-    window.scrollTo(0, 0);
-    
-    // Show loader on all navigation events
-    setIsLoading(true);
-    
-    const timeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000); // Adjust the timeout as needed
-    
-    return () => clearTimeout(timeout);
-  }, [pathname, navigationType]);
-  
-  return <Loader isLoading={isLoading} />;
+function App() {
+  return (
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/overview" element={<Overview />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/tasks" element={<Tasks />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/settings" element={<Settings />} />
+          
+          {/* Service detail routes */}
+          <Route path="/web-development" element={<WebDevelopment />} />
+          <Route path="/mobile-development" element={<MobileDevelopment />} />
+          <Route path="/ui-ux-design" element={<UiUxDesign />} />
+          <Route path="/api-development" element={<ApiDevelopment />} />
+          <Route path="/performance-optimization" element={<PerformanceOptimization />} />
+          <Route path="/full-stack-solutions" element={<FullStackSolutions />} />
+          
+          {/* About detail routes */}
+          <Route path="/our-story" element={<OurStory />} />
+          <Route path="/innovation-driven" element={<InnovationDriven />} />
+          <Route path="/quality-first" element={<QualityFirst />} />
+          <Route path="/client-partnership" element={<ClientPartnership />} />
+          <Route path="/continuous-learning" element={<ContinuousLearning />} />
+          
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
-
-// Initial app loader to show on first load
-function InitialLoader() {
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
-  
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsFirstLoad(false);
-    }, 2000); // Show loader for 2 seconds on initial load
-    
-    return () => clearTimeout(timeout);
-  }, []);
-  
-  return <Loader isLoading={isFirstLoad} />;
-}
-
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <InitialLoader />
-        <ScrollToTopAndLoader />
-        <Suspense fallback={<Loader isLoading={true} />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/our-story" element={<OurStory />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-
-            {/* Service Detail Pages */}
-            <Route path="/services/web-development" element={<WebDevelopment />} />
-            <Route path="/services/mobile-development" element={<MobileDevelopment />} />
-            <Route path="/services/full-stack-solutions" element={<FullStackSolutions />} />
-            <Route path="/services/api-development" element={<ApiDevelopment />} />
-            <Route path="/services/ui-ux-design" element={<UiUxDesign />} />
-            <Route path="/services/performance-optimization" element={<PerformanceOptimization />} />
-            
-            {/* Core Value Pages */}
-            <Route path="/values/quality-first" element={<QualityFirst />} />
-            <Route path="/values/client-partnership" element={<ClientPartnership />} />
-            <Route path="/values/continuous-learning" element={<ContinuousLearning />} />
-            <Route path="/values/innovation-driven" element={<InnovationDriven />} />
-            
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
 
 export default App;
