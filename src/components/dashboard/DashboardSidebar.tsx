@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { X, User, MessageCircle, Users, Calendar, FileText, Settings, Code } from 'lucide-react';
 import { useSpring, animated, config } from '@react-spring/web';
@@ -9,7 +8,14 @@ interface SidebarProps {
   showSidebar: boolean;
 }
 
-const sidebarItems = [
+interface SidebarItem {
+  id: string;
+  title: string;
+  icon: string;
+  notifications: number | false;
+}
+
+const sidebarItems: SidebarItem[][] = [
   [
     { id: '0', title: 'Dashboard', icon: 'dashboard', notifications: false },
     { id: '1', title: 'Overview', icon: 'overview', notifications: false },
@@ -41,6 +47,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
         showSidebar ? 'flex' : 'hidden',
       )}
     >
+      {/* Header */}
       <div className="flex-shrink-0 overflow-hidden p-2">
         <div className="flex items-center h-full sm:justify-center xl:justify-start p-2 border-b border-[#2e2e2e]">
           <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
@@ -59,7 +66,9 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
         </div>
       </div>
 
+      {/* Main Content */}
       <div className="flex-grow overflow-x-hidden overflow-y-auto flex flex-col">
+        {/* User Card */}
         <div className="w-full p-3 h-24 sm:h-20 xl:h-24 hidden sm:block flex-shrink-0">
           <div className="bg-[#353535] rounded-xl w-full h-full flex items-center justify-start sm:justify-center xl:justify-start px-3 sm:px-0 xl:px-3">
             <div className="w-9 h-9 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
@@ -67,12 +76,13 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
             </div>
             <div className="block sm:hidden xl:block ml-3">
               <div className="text-sm font-bold text-white">Development Hub</div>
-              <div className="text-sm text-gray-400">AI/ML Projects</div>
+              <div className="text-sm text-gray-400">General Item</div>
             </div>
             <div className="block sm:hidden xl:block flex-grow" />
           </div>
         </div>
 
+        {/* Main Menu Items */}
         {sidebarItems[0].map((item) => (
           <MenuItem
             key={item.id}
@@ -81,11 +91,13 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
             selected={selected}
           />
         ))}
-        
+
+        {/* Shortcuts Label */}
         <div className="mt-8 mb-0 font-bold px-3 block sm:hidden xl:block text-gray-400">
           SHORTCUTS
         </div>
-        
+
+        {/* Shortcut Menu Items */}
         {sidebarItems[1].map((item) => (
           <MenuItem
             key={item.id}
@@ -94,60 +106,43 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
             selected={selected}
           />
         ))}
-        
+
         <div className="flex-grow" />
-        
+
+        {/* Usage Card */}
         <div className="w-full p-3 h-28 hidden sm:block sm:h-20 xl:h-32">
-          <div className="rounded-xl w-full h-full px-3 sm:px-0 xl:px-3 overflow-hidden bg-gradient-to-br from-blue-900/20 to-purple-900/20">
+          <div className="rounded-xl w-full h-full px-3 sm:px-0 xl:px-3 overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900">
             <div className="block sm:hidden xl:block pt-3">
               <div className="font-bold text-gray-300 text-sm">Used Space</div>
               <div className="text-gray-500 text-xs">
-                Admin updated 09:12 am November 08,2020
+                Admin updated 09:12 am November 08, 2020
               </div>
               <animated.div className="text-right text-gray-400 text-xs">
                 {percentage.to((i) => `${Math.round(i)}%`)}
               </animated.div>
-              <div className="w-full text-gray-300">
-                <svg
-                  viewBox="0 0 100 11"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="5"
-                    y1="5.25"
-                    x2="95"
-                    y2="5.25"
-                    stroke="#3C3C3C"
-                    strokeWidth="5"
-                    strokeLinecap="round"
+              <div className="w-full text-gray-300 mt-2">
+                <div className="w-full h-1 bg-gray-600 rounded-full">
+                  <animated.div
+                    className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                    style={{ width: indicatorWidth.to((i) => `${i}%`) }}
                   />
-                  <animated.line
-                    x1="5"
-                    y1="5.25"
-                    x2={indicatorWidth}
-                    y2="5.25"
-                    stroke="currentColor"
-                    strokeWidth="5"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Footer */}
       <div className="flex-shrink-0 overflow-hidden p-2">
         <div className="flex items-center h-full sm:justify-center xl:justify-start p-2 border-t border-[#2e2e2e]">
-          <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-            D
+          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+            <User size={20} className="text-white" />
           </div>
           <div className="block sm:hidden xl:block ml-2 font-bold text-white">
-            David Wilson
+            Jerry Wilson
           </div>
           <div className="flex-grow block sm:hidden xl:block" />
-          <Settings size={16} className="block sm:hidden xl:block text-gray-400" />
         </div>
       </div>
     </div>
@@ -155,46 +150,44 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
 };
 
 interface MenuItemProps {
-  item: {
-    id: string;
-    title: string;
-    icon: string;
-    notifications: number | false;
-  };
+  item: SidebarItem;
   onClick: (id: string) => void;
   selected: string;
 }
 
-const MenuItem: React.FC<MenuItemProps> = ({ item: { id, title, notifications }, onClick, selected }) => {
+const MenuItem: React.FC<MenuItemProps> = ({ item, onClick, selected }) => {
   const getIcon = (iconName: string) => {
-    const icons: Record<string, React.ReactNode> = {
-      dashboard: <Calendar size={20} />,
-      overview: <FileText size={20} />,
-      chat: <MessageCircle size={20} />,
-      team: <Users size={20} />,
-      tasks: <Calendar size={20} />,
-      reports: <FileText size={20} />,
-      settings: <Settings size={20} />,
+    const iconMap = {
+      dashboard: Code,
+      overview: FileText,
+      chat: MessageCircle,
+      team: Users,
+      tasks: Calendar,
+      reports: FileText,
+      settings: Settings,
     };
-    return icons[iconName] || <Calendar size={20} />;
+    const IconComponent = iconMap[iconName as keyof typeof iconMap] || Code;
+    return <IconComponent size={20} />;
   };
 
   return (
     <div
       className={clsx(
-        'w-full mt-6 flex items-center px-3 sm:px-0 xl:px-3 justify-start sm:justify-center xl:justify-start sm:mt-6 xl:mt-3 cursor-pointer',
-        selected === id 
+        'w-full mt-6 flex items-center px-3 sm:px-0 xl:px-3 justify-start sm:justify-center xl:justify-start sm:mt-6 xl:mt-3 cursor-pointer transition-colors duration-200',
+        selected === item.id 
           ? 'text-white border-r-2 border-white' 
-          : 'text-gray-400 border-r-2 border-transparent hover:text-gray-300',
+          : 'text-gray-400 hover:text-gray-300 border-r-2 border-transparent',
       )}
-      onClick={() => onClick(id)}
+      onClick={() => onClick(item.id)}
     >
-      {getIcon('dashboard')}
-      <div className="block sm:hidden xl:block ml-2">{title}</div>
+      <div className="w-5 h-5 flex items-center justify-center">
+        {getIcon(item.icon)}
+      </div>
+      <div className="block sm:hidden xl:block ml-2">{item.title}</div>
       <div className="block sm:hidden xl:block flex-grow" />
-      {notifications && (
+      {item.notifications && (
         <div className="flex sm:hidden xl:flex bg-pink-600 w-5 h-5 items-center justify-center rounded-full mr-2">
-          <div className="text-white text-sm">{notifications}</div>
+          <div className="text-white text-xs">{item.notifications}</div>
         </div>
       )}
     </div>
