@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabaseClient';
-import { Menu, X, Code, LogIn, User, Lock, Eye, EyeOff, Mail, ArrowLeft, Check } from 'lucide-react';
+import { Menu, X, Code, LogIn, User, Lock, Eye, EyeOff, Mail, ArrowLeft, Check, BarChart3 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useIsMobile } from '../hooks/use-mobile';
 
@@ -14,10 +14,14 @@ export const Navigation = () => {
   const [modalView, setModalView] = useState<'login' | 'signup' | 'forgot-password' | 'reset-success'>('login');
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const lastScrollY = React.useRef(0);
+
+  // List of super admins who can access analytics
+  const superAdmins = ['Abhiram', 'Rojin', 'Arjun'];
 
   // Auth session listener
   useEffect(() => {
@@ -31,7 +35,10 @@ export const Navigation = () => {
     } = supabase.auth.onAuthStateChange((_event, sess) => {
       setSession(sess);
       if (sess) fetchAdmin(sess.user.id);
-      else setIsAdmin(false);
+      else {
+        setIsAdmin(false);
+        setIsSuperAdmin(false);
+      }
     });
 
     return () => subscription?.unsubscribe();
@@ -40,10 +47,18 @@ export const Navigation = () => {
   const fetchAdmin = async (uid: string) => {
     const { data } = await supabase
       .from('admin_users')
-      .select('is_admin')
+      .select('is_admin, full_name')
       .eq('id', uid)
       .single();
+    
     setIsAdmin(!!data?.is_admin);
+    
+    // Check if user is a super admin based on their name
+    if (data?.full_name && superAdmins.includes(data.full_name)) {
+      setIsSuperAdmin(true);
+    } else {
+      setIsSuperAdmin(false);
+    }
   };
 
   const handleLogout = async () => {
@@ -661,6 +676,12 @@ export const Navigation = () => {
               {/* Auth Button for Desktop */}
               {session ? (
                 <>
+                  {isSuperAdmin && (
+                    <Link to="/analytics" className="ml-4 flex items-center gap-1 text-sm font-semibold tracking-wider text-gradient-primary hover:text-blue-400 transition-colors duration-300">
+                      <BarChart3 size={16} className="text-blue-500" />
+                      <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">ANALYTICS</span>
+                    </Link>
+                  )}
                   {isAdmin && (
                     <Link to="/dashboard" className="ml-4 text-sm font-semibold tracking-wider text-white hover:text-blue-400 transition-colors duration-300">
                       DASHBOARD
@@ -731,6 +752,32 @@ export const Navigation = () => {
                     {link.name}
                   </Link>
                 ))}
+                
+                {/* Admin links for mobile */}
+                {session && (
+                  <>
+                    {isSuperAdmin && (
+                      <Link
+                        to="/analytics"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-2 px-6 py-3 rounded-lg text-blue-400 font-medium hover:bg-blue-500/10"
+                      >
+                        <BarChart3 size={18} />
+                        <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">ANALYTICS</span>
+                      </Link>
+                    )}
+                    {isAdmin && (
+                      <Link
+                        to="/dashboard"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-2 px-6 py-3 rounded-lg text-blue-400 font-medium hover:bg-blue-500/10"
+                      >
+                        <User size={18} />
+                        DASHBOARD
+                      </Link>
+                    )}
+                  </>
+                )}
               </div>
               
               {/* Auth Button for Mobile */}
