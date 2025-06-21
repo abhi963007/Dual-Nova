@@ -154,7 +154,7 @@ export const Navigation = () => {
       {/* Login Modal */}
       <div 
         id="login-modal"
-        className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-6 z-50 transition-all duration-300 ${
+        className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4 z-50 transition-all duration-300 ${
           showLoginModal 
             ? 'opacity-100 scale-100' 
             : 'opacity-0 scale-95 pointer-events-none'
@@ -162,7 +162,11 @@ export const Navigation = () => {
         aria-modal={showLoginModal}
         aria-labelledby="modal-title"
       >
-        <div className="bg-[#121212] border border-gray-800 rounded-2xl shadow-xl overflow-hidden relative">
+        <div className={`rounded-2xl shadow-xl overflow-hidden relative ${
+          modalView === 'signup'
+            ? 'bg-gradient-to-br from-[#121212] via-[#151525] to-[#1a1a2e] border border-gray-800/30'
+            : 'bg-[#121212] border border-gray-800'
+        }`}>
           {/* Background gradient decoration */}
           <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full blur-xl"></div>
           <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-purple-500/20 to-blue-600/20 rounded-full blur-xl"></div>
@@ -179,7 +183,11 @@ export const Navigation = () => {
                     <ArrowLeft size={18} />
                   </button>
                 )}
-                <h2 id="modal-title" className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                <h2 id="modal-title" className={`text-2xl font-bold ${
+                  modalView === 'signup' 
+                    ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-blue-500' 
+                    : 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500'
+                }`}>
                   {getModalTitle()}
                 </h2>
               </div>
@@ -192,7 +200,7 @@ export const Navigation = () => {
               </button>
             </div>
             
-            <div className="relative overflow-hidden" style={{ minHeight: '320px' }}>
+            <div className="relative overflow-hidden" style={{ minHeight: '420px' }}>
               {/* Login Form */}
               <div 
                 className={`transition-all duration-300 absolute inset-0 ${
@@ -313,62 +321,62 @@ export const Navigation = () => {
                       : '-translate-x-full opacity-0'
                 }`}
               >
-                <form onSubmit={handleSignup} className="space-y-5">
-                  <div className="space-y-2">
+                <form onSubmit={handleSignup} className="space-y-4">
+                  <div className="space-y-1.5">
                     <label htmlFor="signup-name" className="block text-sm font-medium text-gray-400">
                       Full Name
                     </label>
-                    <div className="relative group">
+                    <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <User size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+                        <User size={16} className="text-gray-500" />
                       </div>
                       <input
                         type="text"
                         id="signup-name"
                         name="name"
                         required
-                        className="block w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                        placeholder="John Doe"
+                        className="block w-full pl-10 pr-3 py-3.5 bg-[#f1f5f9]/10 backdrop-blur-sm border border-gray-700/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                        placeholder="Your full name"
                         autoComplete="name"
                       />
                     </div>
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-1.5 mt-4">
                     <label htmlFor="signup-email" className="block text-sm font-medium text-gray-400">
                       Email
                     </label>
-                    <div className="relative group">
+                    <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Mail size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+                        <Mail size={16} className="text-gray-500" />
                       </div>
                       <input
                         type="email"
                         id="signup-email"
                         name="email"
                         required
-                        className="block w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                        className="block w-full pl-10 pr-3 py-3.5 bg-[#f1f5f9]/10 backdrop-blur-sm border border-gray-700/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         placeholder="your.email@example.com"
                         autoComplete="email"
                       />
                     </div>
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-1.5 mt-4">
                     <label htmlFor="signup-password" className="block text-sm font-medium text-gray-400">
                       Password
                     </label>
-                    <div className="relative group">
+                    <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Lock size={16} className="text-gray-500 group-focus-within:text-blue-400 transition-colors duration-200" />
+                        <Lock size={16} className="text-gray-500" />
                       </div>
                       <input
                         type={showPassword ? "text" : "password"}
                         id="signup-password"
                         name="password"
                         required
-                        className="block w-full pl-10 pr-10 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                        placeholder="••••••••"
+                        className="block w-full pl-10 pr-10 py-3.5 bg-[#f1f5f9]/10 backdrop-blur-sm border border-gray-700/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                        placeholder="Create a password"
                         autoComplete="new-password"
                       />
                       <button
@@ -378,47 +386,48 @@ export const Navigation = () => {
                         aria-label={showPassword ? "Hide password" : "Show password"}
                       >
                         {showPassword ? (
-                          <EyeOff size={16} className="text-gray-500 hover:text-gray-300 transition-colors duration-200" />
+                          <EyeOff size={16} className="text-gray-500 hover:text-gray-300" />
                         ) : (
-                          <Eye size={16} className="text-gray-500 hover:text-gray-300 transition-colors duration-200" />
+                          <Eye size={16} className="text-gray-500 hover:text-gray-300" />
                         )}
                       </button>
                     </div>
                   </div>
                   
-                  <div className="flex items-center">
-                    <input
-                      id="terms"
-                      name="terms"
-                      type="checkbox"
-                      required
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-700 rounded bg-gray-900"
-                    />
-                    <label htmlFor="terms" className="ml-2 block text-sm text-gray-400">
-                      I agree to the <a href="#" className="text-blue-400 hover:text-blue-300">Terms of Service</a> and <a href="#" className="text-blue-400 hover:text-blue-300">Privacy Policy</a>
-                    </label>
-                  </div>
-                  
-                  <button
-                    type="submit"
-                    className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 relative overflow-hidden group"
-                  >
-                    <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full opacity-10 group-hover:w-[600px] group-hover:h-[600px] group-active:bg-white"></span>
-                    <span className="relative">Create Account</span>
-                  </button>
-                  
-                  <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-400">
-                      Already have an account?{" "}
-                      <button 
-                        type="button"
-                        onClick={() => setModalView('login')}
-                        className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200"
-                      >
-                        Sign in
-                      </button>
-                    </p>
-                  </div>
+                  <div className="flex items-center mt-4">
+  <input
+    id="terms"
+    name="terms"
+    type="checkbox"
+    required
+    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-700 rounded bg-[#f1f5f9]/10"
+  />
+  <label htmlFor="terms" className="ml-2 block text-sm text-gray-400">
+    I agree to the <a href="#" className="text-blue-400 hover:text-blue-300">Terms of Service</a> and <a href="#" className="text-blue-400 hover:text-blue-300">Privacy Policy</a>
+  </label>
+</div>
+
+<button
+  type="submit"
+  className="w-full flex justify-center py-2.5 px-4 mt-8 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 relative overflow-hidden group"
+>
+  <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full opacity-10 group-hover:w-[600px] group-hover:h-[600px] group-active:bg-white"></span>
+  <span className="relative">Create Account</span>
+</button>
+
+<div className="mt-6 text-center">
+  <p className="text-sm text-gray-400">
+    Already have an account?{" "}
+    <button
+      type="button"
+      onClick={() => setModalView('login')}
+      className="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200"
+    >
+      Sign in
+    </button>
+  </p>
+</div>
+                    
                 </form>
               </div>
               
