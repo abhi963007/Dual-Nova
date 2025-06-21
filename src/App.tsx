@@ -19,6 +19,9 @@ import FullStackSolutions from './pages/FullStackSolutions';
 import ApiDevelopment from './pages/ApiDevelopment';
 import UiUxDesign from './pages/UiUxDesign';
 import PerformanceOptimization from './pages/PerformanceOptimization';
+import CloudIntegration from './pages/CloudIntegration';
+import AiMlSolutions from './pages/AiMlSolutions';
+import DevOpsAutomation from './pages/DevOpsAutomation';
 import InnovationDriven from './pages/InnovationDriven';
 import ContinuousLearning from './pages/ContinuousLearning';
 import ClientPartnership from './pages/ClientPartnership';
@@ -51,6 +54,9 @@ function App() {
           <Route path="/services/api-development" element={<ApiDevelopment />} />
           <Route path="/services/ui-ux-design" element={<UiUxDesign />} />
           <Route path="/services/performance-optimization" element={<PerformanceOptimization />} />
+          <Route path="/services/cloud-integration" element={<CloudIntegration />} />
+          <Route path="/services/ai-ml-solutions" element={<AiMlSolutions />} />
+          <Route path="/services/devops-automation" element={<DevOpsAutomation />} />
           
           {/* Additional Pages */}
           <Route path="/innovation-driven" element={<InnovationDriven />} />

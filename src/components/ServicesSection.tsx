@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Code, Smartphone, Globe, Database, Palette, Zap } from 'lucide-react';
+import { Code, Smartphone, Globe, Database, Palette, Zap, Cloud, Cpu, Server } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const ServicesSection = () => {
@@ -56,6 +56,36 @@ export const ServicesSection = () => {
       iconColor: 'text-pink-400',
       borderColor: 'border-pink-500/30',
       path: '/services/ui-ux-design'
+    },
+    {
+      icon: Cloud,
+      title: 'Cloud Integration',
+      description: 'Seamless deployment and integration with leading cloud providers for scalability and reliability.',
+      image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400&h=300&fit=crop',
+      gradient: 'from-indigo-500/20 to-sky-600/10',
+      iconColor: 'text-indigo-400',
+      borderColor: 'border-indigo-500/30',
+      path: '/services/cloud-integration'
+    },
+    {
+      icon: Cpu,
+      title: 'AI & ML Solutions',
+      description: 'Implement intelligent features powered by machine learning models and data-driven insights.',
+      image: 'https://images.unsplash.com/photo-1555255707-c07966088b7b?w=400&h=300&fit=crop',
+      gradient: 'from-fuchsia-500/20 to-pink-600/10',
+      iconColor: 'text-fuchsia-400',
+      borderColor: 'border-fuchsia-500/30',
+      path: '/services/ai-ml-solutions'
+    },
+    {
+      icon: Server,
+      title: 'DevOps Automation',
+      description: 'CI/CD pipelines and infrastructure-as-code for faster, reliable deployments.',
+      image: 'https://images.unsplash.com/photo-1607743386760-88ac62b89b8a?w=400&h=300&fit=crop',
+      gradient: 'from-teal-500/20 to-emerald-600/10',
+      iconColor: 'text-teal-400',
+      borderColor: 'border-teal-500/30',
+      path: '/services/devops-automation'
     },
     {
       icon: Zap,

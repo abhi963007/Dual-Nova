@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
 import { Menu, Plus, Search, UserCircle, Loader, Calendar, Clock, Mail, Phone, MapPin, Briefcase } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
@@ -259,10 +260,13 @@ const Team = () => {
 
                       {/* Action Buttons */}
                       <div className="pt-4 border-t border-gray-800 flex gap-2">
-                        <button className="flex-1 px-3 py-2 bg-[#2d2d2d] hover:bg-[#3d3d3d] rounded-lg transition-colors text-sm flex items-center justify-center">
+                        <Link
+                           to={`/team/${user.id}`}
+                           className="flex-1 px-3 py-2 bg-[#2d2d2d] hover:bg-[#3d3d3d] rounded-lg transition-colors text-sm flex items-center justify-center"
+                         >
                           <UserCircle size={14} className="mr-1" />
                           Profile
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </div>
