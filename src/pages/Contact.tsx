@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Navigation } from '../components/Navigation';
 import { supabase } from '../lib/supabaseClient';
@@ -54,11 +53,11 @@ const Contact = () => {
   ];
 
   const budgetRanges = [
-    '$1,000 - $5,000',
-    '$5,000 - $10,000',
-    '$10,000 - $25,000',
-    '$25,000 - $50,000',
-    '$50,000+'
+    '₹84,000 - ₹4,20,000',
+    '₹4,20,000 - ₹8,40,000',
+    '₹8,40,000 - ₹21,00,000',
+    '₹21,00,000 - ₹42,00,000',
+    '₹42,00,000+'
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {

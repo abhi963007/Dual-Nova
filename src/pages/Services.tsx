@@ -22,42 +22,42 @@ const Services = () => {
       title: 'Web Development',
       description: 'Custom web applications built with modern frameworks like React, Vue, and Angular.',
       features: ['Responsive Design', 'Progressive Web Apps', 'Single Page Applications', 'API Integration'],
-      price: 'Starting from $2,500'
+      price: 'Starting from ₹2,10,000'
     },
     {
       icon: Smartphone,
       title: 'Mobile App Development',
       description: 'Native and cross-platform mobile applications for iOS and Android.',
       features: ['React Native', 'Flutter', 'Native iOS/Android', 'App Store Optimization'],
-      price: 'Starting from $5,000'
+      price: 'Starting from ₹4,20,000'
     },
     {
       icon: ShoppingCart,
       title: 'E-commerce Solutions',
       description: 'Complete online stores with payment processing and inventory management.',
       features: ['Custom Shopping Cart', 'Payment Gateway', 'Inventory Management', 'Order Tracking'],
-      price: 'Starting from $3,500'
+      price: 'Starting from ₹2,94,000'
     },
     {
       icon: Palette,
       title: 'UI/UX Design',
       description: 'Beautiful and intuitive user interfaces that enhance user experience.',
       features: ['Wireframing', 'Prototyping', 'User Research', 'Design Systems'],
-      price: 'Starting from $1,500'
+      price: 'Starting from ₹1,26,000'
     },
     {
       icon: Server,
       title: 'Backend Development',
       description: 'Robust server-side solutions with databases and API development.',
       features: ['RESTful APIs', 'Database Design', 'Cloud Integration', 'Microservices'],
-      price: 'Starting from $2,000'
+      price: 'Starting from ₹1,68,000'
     },
     {
       icon: Search,
       title: 'SEO Optimization',
       description: 'Improve your website\'s visibility and ranking on search engines.',
       features: ['On-page SEO', 'Technical SEO', 'Content Strategy', 'Analytics Setup'],
-      price: 'Starting from $800'
+      price: 'Starting from ₹67,200'
     },
   ];
 

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
 import { Menu, Download, Calendar, TrendingUp, Users, DollarSign, Activity } from 'lucide-react';
@@ -11,7 +10,7 @@ const Reports = () => {
       title: 'Revenue Report',
       description: 'Monthly revenue analysis and trends',
       icon: DollarSign,
-      value: '$45,231',
+      value: '₹37,99,404',
       change: '+12.5%',
       lastUpdated: '2 hours ago'
     },

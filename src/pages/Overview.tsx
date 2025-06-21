@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
@@ -62,7 +61,7 @@ const Overview = () => {
         setStats([
           {
             title: 'Total Revenue',
-            value: `$${totalRevenue.toLocaleString()}`,
+            value: `₹${(totalRevenue * 84).toLocaleString()}`,
             change: `${growthRate >= 0 ? '+' : ''}${growthRate.toFixed(1)}%`,
             icon: DollarSign,
           },
