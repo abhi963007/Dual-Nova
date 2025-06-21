@@ -8,7 +8,7 @@ import Beams from './Beams';
 export const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [typedText, setTypedText] = useState('');
-  const fullText = 'Dual Nova Lab';
+  const fullText = 'Dual Nova';
   const [currentIndex, setCurrentIndex] = useState(0);
   const [typingComplete, setTypingComplete] = useState(false);
   const isMobile = useIsMobile();
