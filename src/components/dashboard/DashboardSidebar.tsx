@@ -25,10 +25,10 @@ interface MenuItemProps {
   isActive: boolean;
 }
 
-const sidebarItems: (isSuperAdmin: boolean, adminCount: number) => SidebarItem[][] = (isSuperAdmin, adminCount = 0) => [
+const sidebarItems: (isSuperAdmin: boolean, adminCount: number, overviewCount: number) => SidebarItem[][] = (isSuperAdmin, adminCount = 0, overviewCount = 0) => [
   [
     { id: '0', title: 'Dashboard', icon: 'dashboard', notifications: false, href: '/dashboard' },
-    { id: '1', title: 'Overview', icon: 'overview', notifications: false, href: '/overview' },
+    { id: '1', title: 'Overview', icon: 'overview', notifications: overviewCount > 0 ? overviewCount : false, href: '/overview' },
     ...(isSuperAdmin ? [{ id: '2', title: 'Analytics', icon: 'analytics', notifications: false, href: '/analytics' }] : []),
     { id: '3', title: 'Team', icon: 'team', notifications: adminCount > 0 ? adminCount : false, href: '/team' },
   ],
@@ -41,6 +41,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
   const location = useLocation();
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [storageUsage, setStorageUsage] = useState({ used: 0, total: 1000, percentage: 0, lastUpdated: '' });
+  const [overviewCount, setOverviewCount] = useState(0);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
@@ -65,6 +66,12 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
           setCurrentUser(userData);
         }
         
+        const { count: newUsersToday } = await supabase
+          .from('admin_users')
+          .select('*', { count: 'exact', head: true })
+          .gte('created_at', new Date(new Date().setHours(0,0,0,0)).toISOString());
+        setOverviewCount(newUsersToday || 0);
+
         const { count: projectCount } = await supabase
           .from('admin_users')
           .select('*', { count: 'exact', head: true });

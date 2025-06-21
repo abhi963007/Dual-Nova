@@ -1,17 +1,97 @@
 
 import React from 'react';
+import { supabase } from '../lib/supabaseClient';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
 import { Menu, TrendingUp, Users, Activity, DollarSign } from 'lucide-react';
 
 const Overview = () => {
   const [showSidebar, setShowSidebar] = React.useState(false);
 
-  const stats = [
-    { title: 'Total Revenue', value: '$45,231.89', change: '+20.1%', icon: DollarSign },
-    { title: 'Active Users', value: '2,350', change: '+180.1%', icon: Users },
-    { title: 'Growth Rate', value: '12.5%', change: '+19%', icon: TrendingUp },
-    { title: 'Performance', value: '89.2%', change: '+2.5%', icon: Activity },
-  ];
+  interface StatItem {
+    title: string;
+    value: string;
+    change: string;
+    icon: React.ElementType;
+  }
+
+  const [stats, setStats] = React.useState<StatItem[]>([
+    { title: 'Total Revenue', value: 'Loading...', change: '', icon: DollarSign },
+    { title: 'Active Users', value: 'Loading...', change: '', icon: Users },
+    { title: 'Growth Rate', value: 'Loading...', change: '', icon: TrendingUp },
+    { title: 'Performance', value: 'Loading...', change: '', icon: Activity },
+  ]);
+
+  React.useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        /* ----------------- REVENUE ----------------- */
+        const { data: transactions, error: revErr } = await supabase
+          .from('transactions')
+          .select('amount, created_at');
+        if (revErr) console.error('Revenue fetch error:', revErr);
+        const totalRevenue = transactions?.reduce((acc: number, cur: any) => acc + (cur.amount || 0), 0) || 0;
+
+        /* ----------------- ACTIVE USERS ----------------- */
+        const { count: activeUsers } = await supabase
+          .from('admin_users')
+          .select('*', { head: true, count: 'exact' });
+
+        /* ----------------- GROWTH RATE ----------------- */
+        // naive calculation: current month revenue vs previous month
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        const prevStart = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();
+        const { data: curMonth } = await supabase
+          .from('transactions')
+          .select('amount')
+          .gte('created_at', startOfMonth);
+        const { data: prevMonth } = await supabase
+          .from('transactions')
+          .select('amount')
+          .gte('created_at', prevStart)
+          .lt('created_at', startOfMonth);
+        const curTotal = curMonth?.reduce((a: number, c: any) => a + (c.amount || 0), 0) || 0;
+        const prevTotal = prevMonth?.reduce((a: number, c: any) => a + (c.amount || 0), 0) || 0;
+        const growthRate = prevTotal === 0 ? 0 : ((curTotal - prevTotal) / prevTotal) * 100;
+
+        /* ----------------- PERFORMANCE ----------------- */
+        // example metric: successful transactions / total
+        const successTx = transactions?.filter((t: any) => t.status === 'success').length || 0;
+        const performance = transactions && transactions.length > 0 ? (successTx / transactions.length) * 100 : 0;
+
+        setStats([
+          {
+            title: 'Total Revenue',
+            value: `$${totalRevenue.toLocaleString()}`,
+            change: `${growthRate >= 0 ? '+' : ''}${growthRate.toFixed(1)}%`,
+            icon: DollarSign,
+          },
+          {
+            title: 'Active Users',
+            value: activeUsers?.toLocaleString() || '0',
+            change: '',
+            icon: Users,
+          },
+          {
+            title: 'Growth Rate',
+            value: `${growthRate.toFixed(1)}%`,
+            change: '',
+            icon: TrendingUp,
+          },
+          {
+            title: 'Performance',
+            value: `${performance.toFixed(1)}%`,
+            change: '',
+            icon: Activity,
+          },
+        ]);
+      } catch (err) {
+        console.error('Stats fetch error:', err);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#1e1e1e] text-white font-outfit">
