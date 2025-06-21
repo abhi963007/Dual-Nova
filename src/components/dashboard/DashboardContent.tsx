@@ -5,6 +5,7 @@ import { StatsGraph } from './StatsGraph';
 import { TopCountries } from './TopCountries';
 import { Segmentation } from './Segmentation';
 import { Satisfaction } from './Satisfaction';
+import { EnquiryTable } from './EnquiryTable';
 import { AddComponent } from './AddComponent';
 import { ProjectList } from './ProjectList';
 
@@ -102,6 +103,11 @@ export const DashboardContent: React.FC<ContentProps> = ({ onSidebarShow }) => {
               placeholder="Search projects..."
             />
           </div>
+        </div>
+
+        {/* Enquiries */}
+        <div className="w-full p-2">
+          <EnquiryTable />
         </div>
 
         {employeeData.map((employee) => (
