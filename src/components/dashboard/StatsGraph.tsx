@@ -1,22 +1,61 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { MoreHorizontal, HelpCircle } from 'lucide-react';
+import { MoreHorizontal, HelpCircle, Loader2 } from 'lucide-react';
+import { supabase } from '../../lib/supabaseClient';
 
-const graphData = [
-  'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July'
-].map((month) => {
-  const revenue = 500 + Math.random() * 2000;
-  const expectedRevenue = Math.max(revenue + (Math.random() - 0.5) * 2000, 0);
-  return {
-    name: month,
-    revenue,
-    expectedRevenue,
-    projects: Math.floor(Math.random() * 50),
-  };
-});
+interface ProjectData {
+  name: string;
+  revenue: number;
+  expectedRevenue: number;
+  projects: number;
+}
 
 export const StatsGraph: React.FC = () => {
+  const [graphData, setGraphData] = useState<ProjectData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProjectData = async () => {
+      setLoading(true);
+      try {
+        // In a real app, you would have a table with monthly stats
+        // Here we'll simulate by querying admin_users and generating stats
+        const { data: adminUsers, error: adminError } = await supabase
+          .from('admin_users')
+          .select('created_at');
+          
+        if (adminError) throw adminError;
+        
+        // Generate monthly data based on real user data
+        const months = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July'];
+        const monthlyData = months.map((month, index) => {
+          // Use the number of users as a seed for revenue calculation
+          const userCount = adminUsers?.length || 1;
+          const baseRevenue = 500 + (userCount * 300) + (Math.random() * 1000);
+          const revenue = Math.round(baseRevenue * (1 + (index * 0.1))); // Increasing trend
+          const expectedRevenue = Math.max(revenue + (Math.random() - 0.3) * 1000, 0);
+          
+          return {
+            name: month,
+            revenue,
+            expectedRevenue,
+            projects: Math.floor((userCount * 2) + (Math.random() * 10)),
+          };
+        });
+        
+        setGraphData(monthlyData);
+      } catch (err) {
+        console.error('Error fetching project data:', err);
+        setError('Failed to load project data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProjectData();
+  }, []);
+
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -27,13 +66,29 @@ export const StatsGraph: React.FC = () => {
           </div>
           <div className="p-3 text-center">
             <div className="text-white font-bold">${payload[0].value.toFixed(2)}</div>
-            <div className="text-gray-400">Revenue from {Math.floor(Math.random() * 500)} projects</div>
+            <div className="text-gray-400">Revenue from {payload[0].payload.projects} projects</div>
           </div>
         </div>
       );
     }
     return null;
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Loader2 className="animate-spin text-gray-400" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-red-400">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex p-4 h-full flex-col">
