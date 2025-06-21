@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabaseClient';
 const Dashboard = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [adminCount, setAdminCount] = useState(0);
   const superAdmins = ['Abhiram', 'Rojin', 'Arjun'];
 
   useEffect(() => {
@@ -26,7 +27,25 @@ const Dashboard = () => {
       }
     };
 
+    const fetchAdminCount = async () => {
+      try {
+        const { count, error } = await supabase
+          .from('admin_users')
+          .select('*', { count: 'exact', head: true })
+          .eq('is_admin', true);
+        
+        if (error) {
+          console.error('Error fetching admin count:', error);
+        } else {
+          setAdminCount(count || 0);
+        }
+      } catch (error) {
+        console.error('Error fetching admin count:', error);
+      }
+    };
+
     checkSuperAdmin();
+    fetchAdminCount();
   }, []);
 
   return (
@@ -36,6 +55,7 @@ const Dashboard = () => {
           onSidebarHide={() => setShowSidebar(false)}
           showSidebar={showSidebar}
           isSuperAdmin={isSuperAdmin}
+          adminCount={adminCount}
         />
         <DashboardContent
           onSidebarShow={() => setShowSidebar(true)}

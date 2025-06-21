@@ -8,6 +8,7 @@ interface SidebarProps {
   onSidebarHide: () => void;
   showSidebar: boolean;
   isSuperAdmin?: boolean;
+  adminCount?: number;
 }
 
 interface SidebarItem {
@@ -23,19 +24,19 @@ interface MenuItemProps {
   isActive: boolean;
 }
 
-const sidebarItems: (isSuperAdmin: boolean) => SidebarItem[][] = (isSuperAdmin) => [
+const sidebarItems: (isSuperAdmin: boolean, adminCount: number) => SidebarItem[][] = (isSuperAdmin, adminCount = 0) => [
   [
     { id: '0', title: 'Dashboard', icon: 'dashboard', notifications: false, href: '/dashboard' },
     { id: '1', title: 'Overview', icon: 'overview', notifications: false, href: '/overview' },
     ...(isSuperAdmin ? [{ id: '2', title: 'Analytics', icon: 'analytics', notifications: false, href: '/analytics' }] : []),
-    { id: '3', title: 'Team', icon: 'team', notifications: false, href: '/team' },
+    { id: '3', title: 'Team', icon: 'team', notifications: adminCount > 0 ? adminCount : false, href: '/team' },
   ],
   [
     { id: '6', title: 'Settings', icon: 'settings', notifications: false, href: '/settings' },
   ],
 ];
 
-export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSidebar, isSuperAdmin = false }) => {
+export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSidebar, isSuperAdmin = false, adminCount = 0 }) => {
   const location = useLocation();
   
   const { dashOffset, indicatorWidth, percentage } = useSpring({
@@ -76,7 +77,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
         </div>
 
         <div className="flex-grow overflow-y-auto">
-          {sidebarItems(isSuperAdmin).map((group, groupIndex) => (
+          {sidebarItems(isSuperAdmin, adminCount).map((group, groupIndex) => (
             <div key={groupIndex} className="px-4">
               {groupIndex === 1 && (
                 <hr className="border-t border-[#2e2e2e] w-full my-4 px-4 sm:hidden xl:block" />
