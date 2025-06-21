@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Code, LogIn, User, Lock, Eye, EyeOff, Mail, ArrowLeft, Check } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useIsMobile } from '../hooks/use-mobile';
 
 export const Navigation = () => {
@@ -11,6 +12,7 @@ export const Navigation = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [modalView, setModalView] = useState<'login' | 'signup' | 'forgot-password' | 'reset-success'>('login');
   const location = useLocation();
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const lastScrollY = React.useRef(0);
 
@@ -99,16 +101,18 @@ export const Navigation = () => {
     e.preventDefault();
     // Handle login logic here
     console.log('Login submitted');
-    // Close modal after successful login or validation
+    // Redirect to dashboard after successful login
     setShowLoginModal(false);
+    navigate('/dashboard');
   };
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle signup logic here
     console.log('Signup submitted');
-    // Close modal after successful signup or validation
+    // Redirect to dashboard after successful signup
     setShowLoginModal(false);
+    navigate('/dashboard');
   };
 
   const handleForgotPassword = (e: React.FormEvent) => {
