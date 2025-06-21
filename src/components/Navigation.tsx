@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabaseClient';
 import { Menu, X, Code, LogIn, User, Lock, Eye, EyeOff, Mail, ArrowLeft, Check } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -12,10 +13,44 @@ export const Navigation = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [modalView, setModalView] = useState<'login' | 'signup' | 'forgot-password' | 'reset-success'>('login');
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const lastScrollY = React.useRef(0);
+
+  // Auth session listener
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      if (data.session) fetchAdmin(data.session.user.id);
+    });
+
+    const {
+      data: { subscription }
+    } = supabase.auth.onAuthStateChange((_event, sess) => {
+      setSession(sess);
+      if (sess) fetchAdmin(sess.user.id);
+      else setIsAdmin(false);
+    });
+
+    return () => subscription?.unsubscribe();
+  }, []);
+
+  const fetchAdmin = async (uid: string) => {
+    const { data } = await supabase
+      .from('admin_users')
+      .select('is_admin')
+      .eq('id', uid)
+      .single();
+    setIsAdmin(!!data?.is_admin);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -622,93 +657,83 @@ export const Navigation = () => {
                 >
                   {link.name}
                   <span className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 group-hover:w-1/2 ${
-                    isActive(link.href) ? 'w-1/3' : 'w-0'
                   }`}></span>
                 </Link>
               ))}
-              
-              {/* Login Button for Desktop */}
-              <button
-                onClick={() => setShowLoginModal(true)}
-                className="ml-4 flex items-center gap-2 px-5 py-2 text-sm font-semibold tracking-wider text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-full hover:from-blue-600 hover:to-purple-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#121212] relative overflow-hidden group shadow-lg shadow-blue-500/20"
-                aria-label="Login to your account"
-              >
-                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                <LogIn size={16} className="relative z-10 group-hover:translate-x-0.5 transition-transform duration-300" />
-                <span className="relative z-10">LOGIN</span>
-              </button>
+　　 　 　 　 {/* Auth Button for Desktop */}
+              {session ? (
+                <>
+                  {isAdmin && (
+                    <Link to="/dashboard" className="ml-4 text-sm font-semibold tracking-wider text-white hover:text-blue-400 transition-colors duration-300">
+                      DASHBOARD
+                    </Link>
+                  )}
+                  <button
+                    onClick={handleLogout}
+                    className="ml-4 flex items-center gap-2 px-5 py-2 text-sm font-semibold tracking-wider text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-full hover:from-purple-600 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#121212] relative overflow-hidden group shadow-lg shadow-blue-500/20"
+                    aria-label="Logout"
+                  >
+                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                    <LogIn size={16} className="relative z-10 group-hover:-translate-x-0.5 transition-transform duration-300 rotate-180" />
+                    <span className="relative z-10">LOGOUT</span>
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="ml-4 flex items-center gap-2 px-5 py-2 text-sm font-semibold tracking-wider text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-full hover:from-blue-600 hover:to-purple-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#121212] relative overflow-hidden group shadow-lg shadow-blue-500/20"
+                  aria-label="Login to your account"
+                >
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  <LogIn size={16} className="relative z-10 group-hover:translate-x-0.5 transition-transform duration-300" />
+                  <span className="relative z-10">LOGIN</span>
+                </button>
+              )}
             </div>
 
             {/* Mobile menu button - positioned to avoid badge overlap */}
             <div className="md:hidden">
               <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="relative overflow-hidden w-10 h-10 flex items-center justify-center text-white bg-transparent rounded-lg hover:bg-white/5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#121212] z-50"
-                aria-label={isOpen ? 'Close menu' : 'Open menu'}
-                aria-expanded={isOpen}
-              >
-                <div className="relative">
-                  <Menu 
-                    size={20} 
-                    className={`transition-all duration-300 ${isOpen ? 'opacity-0 rotate-180 scale-0' : 'opacity-100 rotate-0 scale-100'}`} 
-                  />
-                  <X 
-                    size={20} 
-                    className={`absolute top-0 left-0 transition-all duration-300 ${isOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-180 scale-0'}`} 
-                  />
-                </div>
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile Navigation */}
-          <div 
-            className={`md:hidden fixed left-0 right-0 transition-all duration-500 px-6 z-50 ${
-              isOpen ? 'top-[72px] opacity-100' : 'top-[-400px] opacity-0'
-            }`}
-          >
-            <div className="rounded-2xl backdrop-blur-lg bg-[#121212]/90 border border-gray-800/50 shadow-xl shadow-black/20 overflow-hidden">
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                {navLinks.map((link, index) => (
-                  <Link
-                    key={link.name}
-                    to={link.href}
-                    onClick={() => setIsOpen(false)}
-                    aria-label={link.ariaLabel}
-                    className={`block px-4 py-3 text-sm font-medium tracking-wider rounded-xl transition-all duration-300 ${
-                      isActive(link.href)
-                        ? 'text-white border-l-2 border-blue-400 bg-gradient-to-r from-blue-500/10 to-purple-500/10'
-                        : 'text-gray-300 hover:text-white border-l-2 border-transparent hover:border-purple-400/50 hover:bg-white/5'
-                    }`}
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-1.5 h-1.5 rounded-full ${isActive(link.href) ? 'bg-accent-gradient animate-pulse-slow' : 'bg-gray-500'}`}></div>
+{{ ... }
                       <span>{link.name}</span>
                     </div>
                   </Link>
                 ))}
                 
-                {/* Login Button for Mobile */}
+                {/* Auth Button for Mobile */}
                 <div className="px-4 py-3">
-                  <button
-                    onClick={() => {
-                      setIsOpen(false);
-                      setShowLoginModal(true);
-                    }}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold tracking-wider text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-blue-500/20"
-                    aria-label="Login to your account"
-                  >
-                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                    <LogIn size={16} className="relative z-10 group-hover:translate-x-0.5 transition-transform duration-300" />
-                    <span className="relative z-10">LOGIN</span>
-                  </button>
+                  {session ? (
+                    <button
+                      onClick={() => {
+                        setIsOpen(false);
+                        handleLogout();
+                      }}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold tracking-wider text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl hover:from-purple-600 hover:to-blue-600 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-blue-500/20"
+                      aria-label="Logout"
+                    >
+                      <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                      <LogIn size={16} className="relative z-10 rotate-180" />
+                      <span className="relative z-10">LOGOUT</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setIsOpen(false);
+                        setShowLoginModal(true);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold tracking-wider text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-blue-500/20"
+                      aria-label="Login to your account"
+                    >
+                      <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                      <LogIn size={16} className="relative z-10" />
+                      <span className="relative z-10">LOGIN</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </nav>
     </>
   );
 };
