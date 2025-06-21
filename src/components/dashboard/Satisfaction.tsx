@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { MoreHorizontal } from 'lucide-react';
-import { useSpring, animated, config } from 'react-spring';
+import { useSpring, animated, config } from '@react-spring/web';
 
 export const Satisfaction: React.FC = () => {
   const { dashOffset } = useSpring({

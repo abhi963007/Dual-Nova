@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { X, User, MessageCircle, Users, Calendar, FileText, Settings, Code } from 'lucide-react';
-import { useSpring, animated, config } from 'react-spring';
+import { useSpring, animated, config } from '@react-spring/web';
 import clsx from 'clsx';
 
 interface SidebarProps {

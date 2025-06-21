@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { TrendingUp, TrendingDown, CheckCircle } from 'lucide-react';
-import { useSpring, animated } from 'react-spring';
+import { useSpring, animated } from '@react-spring/web';
 import clsx from 'clsx';
 
 interface NameCardProps {
