@@ -20,8 +20,7 @@ const Team = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
-  const [availableFields, setAvailableFields] = useState<string[]>([]);
-  
+
   const superAdmins = ['Abhiram', 'Rojin', 'Arjun'];
 
   // Fetch user data
@@ -53,13 +52,6 @@ const Team = () => {
           console.error('Error fetching admin users:', error);
           setError('Failed to load team members. Please try again later.');
           return;
-        }
-
-        // Log what fields are available in the response
-        if (data && data.length > 0) {
-          const fields = Object.keys(data[0]);
-          console.log('Available fields in admin_users:', fields);
-          setAvailableFields(fields);
         }
 
         console.log('Admin users data:', data);
@@ -135,20 +127,6 @@ const Team = () => {
                 />
               </div>
             </div>
-
-            {/* Debug Info */}
-            {availableFields.length > 0 && (
-              <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                <p className="text-sm text-blue-300 mb-2">Available fields in database:</p>
-                <div className="flex flex-wrap gap-2">
-                  {availableFields.map(field => (
-                    <span key={field} className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-md text-xs">
-                      {field}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Error Message */}
             {error && (
