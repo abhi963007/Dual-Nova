@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabaseClient';
 import { Menu, X, Code, LogIn, User, Lock, Eye, EyeOff, Mail, ArrowLeft, Check } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useIsMobile } from '../hooks/use-mobile';
@@ -97,21 +98,25 @@ export const Navigation = () => {
 
   const isActive = (href: string) => location.pathname === href;
 
-  // Default demo credentials
-  const DEFAULT_EMAIL = 'admin@example.com';
-  const DEFAULT_PASSWORD = 'password123';
+  
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     const email = String(formData.get('email'));
     const password = String(formData.get('password'));
 
-    if (email === DEFAULT_EMAIL && password === DEFAULT_PASSWORD) {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+
+      // ensure profile row exists (no-op if already there)
+      await supabase.from('admin_users').upsert({ id: data.user.id });
+
       setShowLoginModal(false);
       navigate('/dashboard');
-    } else {
-      alert('Invalid credentials. Use admin@example.com / password123');
+    } catch (err: any) {
+      alert(err.message || 'Login failed');
     }
   };
 

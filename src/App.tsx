@@ -11,8 +11,8 @@ import Dashboard from './pages/Dashboard';
 import Overview from './pages/Overview';
 
 import Team from './pages/Team';
-import Tasks from './pages/Tasks';
-import Reports from './pages/Reports';
+
+
 import Settings from './pages/Settings';
 
 function App() {
@@ -29,8 +29,8 @@ function App() {
           <Route path="/overview" element={<Overview />} />
           
           <Route path="/team" element={<Team />} />
-          <Route path="/tasks" element={<Tasks />} />
-          <Route path="/reports" element={<Reports />} />
+          
+          
           <Route path="/settings" element={<Settings />} />
           
           <Route path="*" element={<NotFound />} />

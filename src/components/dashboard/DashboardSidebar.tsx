@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { X, User, Users, Calendar, FileText, Settings, Code } from 'lucide-react';
+import { X, User, Users, FileText, Settings, Code } from 'lucide-react';
 import { useSpring, animated, config } from '@react-spring/web';
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
@@ -26,8 +26,8 @@ const sidebarItems: SidebarItem[][] = [
     { id: '3', title: 'Team', icon: 'team', notifications: false, href: '/team' },
   ],
   [
-    { id: '4', title: 'Tasks', icon: 'tasks', notifications: false, href: '/tasks' },
-    { id: '5', title: 'Reports', icon: 'reports', notifications: false, href: '/reports' },
+    
+    
     { id: '6', title: 'Settings', icon: 'settings', notifications: false, href: '/settings' },
   ],
 ];
@@ -164,8 +164,8 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, isActive }) => {
       overview: FileText,
       
       team: Users,
-      tasks: Calendar,
-      reports: FileText,
+      
+      
       settings: Settings,
     };
     const IconComponent = iconMap[iconName as keyof typeof iconMap] || Code;
