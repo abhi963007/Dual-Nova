@@ -102,6 +102,47 @@
   }
 }
 
+/* Custom animations for the loader */
+@keyframes spin-one {
+  0% {
+    transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+  }
+}
+
+@keyframes spin-two {
+  0% {
+    transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+  }
+}
+
+@keyframes spin-three {
+  0% {
+    transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+  }
+}
+
+/* Apply the animations to the classes */
+.animate-spin-one {
+  animation: spin-one 1.5s linear infinite;
+}
+
+.animate-spin-two {
+  animation: spin-two 1.5s linear infinite;
+}
+
+.animate-spin-three {
+  animation: spin-three 1.5s linear infinite;
+}
+
 /* Loader Animation Styles */
 .loader-container {
   position: fixed;

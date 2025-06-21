@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { Users, Target, Award, Lightbulb, Code, Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const About = () => {
   const stats = [
@@ -237,6 +238,17 @@ const About = () => {
                 <p>
                   Our journey has been marked by continuous learning, adaptation, and an unwavering commitment to excellence. We believe that great software is not just about code – it's about understanding people, solving real problems, and creating lasting value.
                 </p>
+                <div className="mt-8">
+                  <Link 
+                    to="/our-story"
+                    className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold tracking-wider text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-full hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg shadow-blue-500/20 group"
+                  >
+                    <span>Read Our Full Story</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </Link>
+                </div>
               </div>
             </div>
             <div className={`relative transition-all duration-1000 delay-300 transform ${storyVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>

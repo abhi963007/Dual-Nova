@@ -12,6 +12,7 @@ import Overview from './pages/Overview';
 import Analytics from './pages/Analytics';
 import Team from './pages/Team';
 import Settings from './pages/Settings';
+import OurStory from './pages/OurStory';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/team" element={<Team />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/our-story" element={<OurStory />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Globe, MapPin, ArrowRight, Code, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '../hooks/use-mobile';
 import { Link, useNavigate } from 'react-router-dom';
 import Beams from './Beams';
 
