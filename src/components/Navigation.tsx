@@ -124,7 +124,8 @@ export const Navigation = () => {
       }
 
       setShowLoginModal(false);
-      navigate(profile.is_admin ? '/dashboard' : '/');
+      const isAdmin = !!profile?.is_admin;
+      navigate(isAdmin ? '/dashboard' : '/');
     } catch (err: any) {
       alert(err.message || 'Login failed');
     }
