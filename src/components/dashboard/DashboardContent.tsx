@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Search, Menu, Star, Calendar } from 'lucide-react';
 import { NameCard } from './NameCard';
 import { StatsGraph } from './StatsGraph';
-import { TopCountries } from './TopCountries';
 import { Segmentation } from './Segmentation';
 import { Satisfaction } from './Satisfaction';
 import { EnquiryTable } from './EnquiryTable';
@@ -206,11 +205,6 @@ export const DashboardContent: React.FC<ContentProps> = ({ onSidebarShow }) => {
         <div className="w-full p-2 lg:w-2/3">
           <div className="rounded-lg bg-[#171717] h-80">
             <StatsGraph />
-          </div>
-        </div>
-        <div className="w-full p-2 lg:w-1/3">
-          <div className="rounded-lg bg-[#171717] h-80">
-            <TopCountries />
           </div>
         </div>
 
