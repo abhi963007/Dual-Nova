@@ -97,13 +97,22 @@ export const Navigation = () => {
 
   const isActive = (href: string) => location.pathname === href;
 
+  // Default demo credentials
+  const DEFAULT_EMAIL = 'admin@example.com';
+  const DEFAULT_PASSWORD = 'password123';
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login submitted');
-    // Redirect to dashboard after successful login
-    setShowLoginModal(false);
-    navigate('/dashboard');
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const email = String(formData.get('email'));
+    const password = String(formData.get('password'));
+
+    if (email === DEFAULT_EMAIL && password === DEFAULT_PASSWORD) {
+      setShowLoginModal(false);
+      navigate('/dashboard');
+    } else {
+      alert('Invalid credentials. Use admin@example.com / password123');
+    }
   };
 
   const handleSignup = (e: React.FormEvent) => {
@@ -228,6 +237,7 @@ export const Navigation = () => {
                         type="email"
                         id="email"
                         name="email"
+                        defaultValue={DEFAULT_EMAIL}
                         required
                         className="block w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         placeholder="your.email@example.com"
@@ -248,6 +258,7 @@ export const Navigation = () => {
                         type={showPassword ? "text" : "password"}
                         id="password"
                         name="password"
+                        defaultValue={DEFAULT_PASSWORD}
                         required
                         className="block w-full pl-10 pr-10 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         placeholder="••••••••"
