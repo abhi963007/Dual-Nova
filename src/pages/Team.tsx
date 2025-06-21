@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
-import { Menu, Plus, Search, UserCircle, Loader, Calendar, Clock } from 'lucide-react';
+import { Menu, Plus, Search, UserCircle, Loader, Calendar, Clock, Mail, Phone, MapPin, Briefcase } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 
 // Define a minimal type with only the fields we know exist
@@ -10,6 +10,10 @@ interface AdminUser {
   is_admin?: boolean;
   created_at?: string | null;
   last_sign_in_at?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  location?: string | null;
+  department?: string | null;
   [key: string]: any; // Allow for any other fields that might exist
 }
 
@@ -185,28 +189,72 @@ const Team = () => {
                       </div>
 
                       {/* User Details */}
-                      <div className="space-y-2 mb-4">
-                        {Object.entries(user).map(([key, value]) => {
-                          // Skip id and certain fields 
-                          if (['id', 'is_admin', '__typename'].includes(key)) return null;
-                          
-                          // Format dates
-                          let displayValue = value;
-                          if (key.includes('_at') && value) {
-                            displayValue = formatDate(value as string);
-                          }
-                          
-                          return (
-                            <div key={key} className="flex justify-between text-sm">
-                              <span className="text-gray-400">{key.replace(/_/g, ' ')}:</span>
-                              <span className="text-white font-medium">{
-                                displayValue !== null && displayValue !== undefined 
-                                  ? String(displayValue) 
-                                  : 'Not available'
-                              }</span>
-                            </div>
-                          );
-                        })}
+                      <div className="space-y-2 mb-4 text-sm">
+                        {/* Email */}
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <Mail size={14} />
+                            <span>Email</span>
+                          </div>
+                          <span className="text-white font-medium truncate max-w-[55%] text-right">
+                            {user.email ?? 'Not available'}
+                          </span>
+                        </div>
+
+                        {/* Phone */}
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <Phone size={14} />
+                            <span>Phone</span>
+                          </div>
+                          <span className="text-white font-medium">
+                            {user.phone ?? 'Not available'}
+                          </span>
+                        </div>
+
+                        {/* Location */}
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <MapPin size={14} />
+                            <span>Location</span>
+                          </div>
+                          <span className="text-white font-medium">
+                            {user.location ?? 'Not available'}
+                          </span>
+                        </div>
+
+                        {/* Department */}
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <Briefcase size={14} />
+                            <span>Department</span>
+                          </div>
+                          <span className="text-white font-medium">
+                            {user.department ?? 'Not available'}
+                          </span>
+                        </div>
+
+                        {/* Joined */}
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <Calendar size={14} />
+                            <span>Joined</span>
+                          </div>
+                          <span className="text-white font-medium">
+                            {formatDate(user.created_at)}
+                          </span>
+                        </div>
+
+                        {/* Last Sign-In */}
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <Clock size={14} />
+                            <span>Last sign-in</span>
+                          </div>
+                          <span className="text-white font-medium">
+                            {formatDate(user.last_sign_in_at)}
+                          </span>
+                        </div>
                       </div>
 
                       {/* Action Buttons */}

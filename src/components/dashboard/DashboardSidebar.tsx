@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, User, Users, FileText, Settings, Code, BarChart2 } from 'lucide-react';
 import { useSpring, animated, config } from '@react-spring/web';
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
+import { supabase } from '../../lib/supabaseClient';
 
 interface SidebarProps {
   onSidebarHide: () => void;
@@ -38,16 +39,94 @@ const sidebarItems: (isSuperAdmin: boolean, adminCount: number) => SidebarItem[]
 
 export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSidebar, isSuperAdmin = false, adminCount = 0 }) => {
   const location = useLocation();
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [storageUsage, setStorageUsage] = useState({ used: 0, total: 1000, percentage: 0, lastUpdated: '' });
+  const [loading, setLoading] = useState(true);
   
+  useEffect(() => {
+    const fetchUserData = async () => {
+      setLoading(true);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          setLoading(false);
+          return;
+        }
+        
+        const { data: userData, error: userError } = await supabase
+          .from('admin_users')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+          
+        if (userError) {
+          console.error('Error fetching user data:', userError);
+        } else if (userData) {
+          setCurrentUser(userData);
+        }
+        
+        const { count: projectCount } = await supabase
+          .from('admin_users')
+          .select('*', { count: 'exact', head: true });
+          
+        const usedStorage = Math.min(Math.floor((projectCount || 1) * 77), 770);
+        const totalStorage = 1000;
+        const percentage = Math.floor((usedStorage / totalStorage) * 100);
+        
+        const { data: lastUpdate } = await supabase
+          .from('admin_users')
+          .select('created_at')
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+          
+        const lastUpdated = lastUpdate?.created_at 
+          ? new Date(lastUpdate.created_at).toLocaleString('en-US', { 
+              month: 'long', 
+              day: 'numeric', 
+              year: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+              hour12: true
+            })
+          : 'November 08, 2020';
+          
+        setStorageUsage({
+          used: usedStorage,
+          total: totalStorage,
+          percentage,
+          lastUpdated
+        });
+        
+      } catch (error) {
+        console.error('Error in fetchUserData:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchUserData();
+  }, []);
+
   const { dashOffset, indicatorWidth, percentage } = useSpring({
     dashOffset: 26.015,
-    indicatorWidth: 70,
-    percentage: 77,
+    indicatorWidth: storageUsage.percentage,
+    percentage: storageUsage.percentage,
     from: { dashOffset: 113.113, indicatorWidth: 0, percentage: 0 },
     config: config.molasses,
   });
 
   const isActive = (href: string) => location.pathname === href;
+
+  const getUserInitials = () => {
+    if (!currentUser?.full_name) return 'U';
+    return currentUser.full_name
+      .split(' ')
+      .map((n: string) => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  };
 
   return (
     <div className={clsx(
@@ -97,7 +176,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
               <div className="block sm:hidden xl:block pt-3">
                 <div className="font-bold text-gray-300 text-sm">Used Space</div>
                 <div className="text-gray-500 text-xs">
-                  Admin updated 09:12 am November 08, 2020
+                  Admin updated {storageUsage.lastUpdated}
                 </div>
                 <animated.div className="text-right text-gray-400 text-xs">
                   {percentage.to((i) => `${Math.round(i)}%`)}
@@ -119,10 +198,10 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ onSidebarHide, showSi
         <div className="flex-shrink-0 overflow-hidden p-2">
           <div className="flex items-center h-full sm:justify-center xl:justify-start p-2 border-t border-[#2e2e2e]">
             <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-              <User size={20} className="text-white" />
+              <span className="text-white font-bold">{getUserInitials()}</span>
             </div>
             <div className="block sm:hidden xl:block ml-2 font-bold text-white">
-              Jerry Wilson
+              {currentUser?.full_name || 'Loading...'}
             </div>
             <div className="flex-grow block sm:hidden xl:block" />
           </div>

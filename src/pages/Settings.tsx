@@ -1,11 +1,16 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
 import { Menu, User, Bell, Shield, Palette, Globe, Save } from 'lucide-react';
+import { supabase } from '../lib/supabaseClient';
+import { useToast } from '../hooks/use-toast';
 
 const Settings = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+  const { toast } = useToast();
+  const [profile, setProfile] = useState({ full_name: '', email: '', phone: '', location: '', department: '', bio: '' });
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
@@ -14,6 +19,37 @@ const Settings = () => {
     { id: 'appearance', label: 'Appearance', icon: Palette },
     { id: 'general', label: 'General', icon: Globe },
   ];
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      setLoadingProfile(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { setLoadingProfile(false); return; }
+      const { data, error } = await supabase.from('admin_users').select('*').eq('id', session.user.id).single();
+      if (error) { console.error(error); toast({ title: 'Error loading profile' }); }
+      if (data) setProfile({ full_name: data.full_name || '', email: data.email || '', phone: data.phone || '', location: data.location || '', department: data.department || '', bio: data.bio || '' });
+      setLoadingProfile(false);
+    };
+    loadProfile();
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { toast({ title: 'Not signed in' }); setSaving(false); return; }
+    const updates = { ...profile, updated_at: new Date().toISOString() };
+    const { error } = await supabase.from('admin_users').update(updates).eq('id', session.user.id);
+    if (error) { console.error(error); toast({ title: 'Error saving profile', description: error.message, variant: 'destructive' }); }
+    else { toast({ title: 'Profile updated' }); }
+    setSaving(false);
+  };
+
+  const getInitials = (name: string) => {
+    const words = name.trim().split(' ').filter(Boolean);
+    if (words.length === 0) return '?';
+    if (words.length === 1) return words[0][0].toUpperCase();
+    return (words[0][0] + words[1][0]).toUpperCase();
+  };
 
   return (
     <div className="min-h-screen bg-[#1e1e1e] text-white font-outfit">
@@ -65,14 +101,14 @@ const Settings = () => {
 
             {/* Content */}
             <div className="flex-1 p-6 overflow-auto">
-              {activeTab === 'profile' && (
+              {activeTab === 'profile' && !loadingProfile && (
                 <div className="max-w-2xl">
                   <div className="bg-[#171717] rounded-xl p-6 border border-gray-800 mb-6">
                     <h3 className="text-lg font-semibold text-white mb-4">Profile Information</h3>
                     <div className="space-y-4">
                       <div className="flex items-center gap-4 mb-6">
                         <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                          JW
+                          {getInitials(profile.full_name)}
                         </div>
                         <div>
                           <button className="px-4 py-2 bg-[#2d2d2d] hover:bg-[#3d3d3d] rounded-lg transition-colors text-sm">
@@ -85,7 +121,8 @@ const Settings = () => {
                           <label className="block text-sm font-medium text-gray-400 mb-2">First Name</label>
                           <input
                             type="text"
-                            defaultValue="Jerry"
+                            value={profile.full_name.split(' ')[0] || ''}
+                            onChange={(e) => setProfile({ ...profile, full_name: e.target.value + ' ' + (profile.full_name.split(' ')[1] || '') })}
                             className="w-full px-3 py-2 bg-[#2d2d2d] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
@@ -93,7 +130,8 @@ const Settings = () => {
                           <label className="block text-sm font-medium text-gray-400 mb-2">Last Name</label>
                           <input
                             type="text"
-                            defaultValue="Wilson"
+                            value={profile.full_name.split(' ')[1] || ''}
+                            onChange={(e) => setProfile({ ...profile, full_name: (profile.full_name.split(' ')[0] || '') + ' ' + e.target.value })}
                             className="w-full px-3 py-2 bg-[#2d2d2d] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
@@ -102,7 +140,8 @@ const Settings = () => {
                         <label className="block text-sm font-medium text-gray-400 mb-2">Email</label>
                         <input
                           type="email"
-                          defaultValue="jerry.wilson@dualnova.com"
+                          value={profile.email}
+                          onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                           className="w-full px-3 py-2 bg-[#2d2d2d] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
@@ -110,13 +149,18 @@ const Settings = () => {
                         <label className="block text-sm font-medium text-gray-400 mb-2">Bio</label>
                         <textarea
                           rows={3}
-                          defaultValue="Full-stack developer passionate about creating innovative solutions."
+                          value={profile.bio}
+                          onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                           className="w-full px-3 py-2 bg-[#2d2d2d] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
+              )}
+
+              {activeTab === 'profile' && loadingProfile && (
+                <div className="text-gray-400">Loading profile...</div>
               )}
 
               {activeTab === 'notifications' && (
@@ -269,7 +313,7 @@ const Settings = () => {
 
               {/* Save Button */}
               <div className="mt-6">
-                <button className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-colors">
+                <button onClick={handleSave} disabled={saving} className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-colors ${saving ? 'bg-gray-600 cursor-not-allowed' : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600'}`}>
                   <Save size={16} />
                   Save Changes
                 </button>
