@@ -120,13 +120,35 @@ export const Navigation = () => {
     }
   };
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log('Signup submitted');
-    // Redirect to dashboard after successful signup
-    setShowLoginModal(false);
-    navigate('/dashboard');
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const email = String(formData.get('email'));
+    const password = String(formData.get('password'));
+    const fullName = String(formData.get('name'));
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name: fullName } }
+      });
+      if (error) throw error;
+
+      // user may need to confirm email – warn politely
+      if (data.session && data.user) {
+        // email auto-confirmed, we are logged in
+        await supabase.from('admin_users').upsert({ id: data.user.id, full_name: fullName });
+        setShowLoginModal(false);
+        navigate('/dashboard');
+        return;
+      }
+
+      alert('Account created! Please check your email to confirm before logging in.');
+      setModalView('login');
+    } catch (err: any) {
+      alert(err.message || 'Sign-up failed');
+    }
   };
 
   const handleForgotPassword = (e: React.FormEvent) => {
@@ -242,7 +264,6 @@ export const Navigation = () => {
                         type="email"
                         id="email"
                         name="email"
-                        defaultValue={DEFAULT_EMAIL}
                         required
                         className="block w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         placeholder="your.email@example.com"
@@ -263,7 +284,6 @@ export const Navigation = () => {
                         type={showPassword ? "text" : "password"}
                         id="password"
                         name="password"
-                        defaultValue={DEFAULT_PASSWORD}
                         required
                         className="block w-full pl-10 pr-10 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         placeholder="••••••••"
