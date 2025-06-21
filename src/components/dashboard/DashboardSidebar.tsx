@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { X, User, MessageCircle, Users, Calendar, FileText, Settings, Code } from 'lucide-react';
+import { X, User, Users, Calendar, FileText, Settings, Code } from 'lucide-react';
 import { useSpring, animated, config } from '@react-spring/web';
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
@@ -22,7 +22,7 @@ const sidebarItems: SidebarItem[][] = [
   [
     { id: '0', title: 'Dashboard', icon: 'dashboard', notifications: false, href: '/dashboard' },
     { id: '1', title: 'Overview', icon: 'overview', notifications: false, href: '/overview' },
-    { id: '2', title: 'Chat', icon: 'chat', notifications: 6, href: '/chat' },
+    
     { id: '3', title: 'Team', icon: 'team', notifications: false, href: '/team' },
   ],
   [
@@ -162,7 +162,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, isActive }) => {
     const iconMap = {
       dashboard: Code,
       overview: FileText,
-      chat: MessageCircle,
+      
       team: Users,
       tasks: Calendar,
       reports: FileText,
