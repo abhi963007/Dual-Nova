@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { TrendingUp, TrendingDown, CheckCircle } from 'lucide-react';
 import { useSpring, animated } from '@react-spring/web';
@@ -21,8 +20,11 @@ export const NameCard: React.FC<NameCardProps> = ({
   tasksCompleted,
   imgId,
 }) => {
+  // Convert USD to INR (exchange rate: 1 USD = 84 INR)
+  const inrTransactions = transactions * 84;
+  
   const { animatedTransactions, barPlayhead } = useSpring({
-    animatedTransactions: transactions,
+    animatedTransactions: inrTransactions,
     barPlayhead: 1,
     from: { animatedTransactions: 0, barPlayhead: 0 },
   });
@@ -79,7 +81,7 @@ export const NameCard: React.FC<NameCardProps> = ({
               'text-lg',
             )}
           >
-            {animatedTransactions.to((i) => `$${i.toFixed(0)}`)}
+            {animatedTransactions.to((i) => `₹${i.toFixed(0)}`)}
           </animated.div>
           <div className="text-sm text-gray-400">Last 6 months</div>
         </div>

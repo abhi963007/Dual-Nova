@@ -58,6 +58,9 @@ export const StatsGraph: React.FC = () => {
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+      // Convert USD to INR (exchange rate: 1 USD = 84 INR)
+      const revenueInINR = payload[0].value * 84;
+      
       return (
         <div className="bg-[#1d1d1d] border border-gray-700 rounded-xl overflow-hidden">
           <div className="flex items-center justify-between p-2 bg-[#252525]">
@@ -65,7 +68,7 @@ export const StatsGraph: React.FC = () => {
             <MoreHorizontal className="w-4 h-4 text-gray-400" />
           </div>
           <div className="p-3 text-center">
-            <div className="text-white font-bold">${payload[0].value.toFixed(2)}</div>
+            <div className="text-white font-bold">₹{revenueInINR.toFixed(2)}</div>
             <div className="text-gray-400">Revenue from {payload[0].payload.projects} projects</div>
           </div>
         </div>
