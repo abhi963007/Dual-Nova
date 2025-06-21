@@ -8,6 +8,7 @@ import Services from './pages/Services';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
 import Dashboard from './pages/Dashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 import Overview from './pages/Overview';
 
 import Team from './pages/Team';
@@ -25,7 +26,7 @@ function App() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/overview" element={<Overview />} />
           
           <Route path="/team" element={<Team />} />

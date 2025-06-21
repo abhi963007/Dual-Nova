@@ -111,7 +111,7 @@ export const Navigation = () => {
       if (error) throw error;
 
       // fetch admin flag
-      const { data: profile } = await supabase
+      let { data: profile } = await supabase
         .from('admin_users')
         .select('is_admin')
         .eq('id', data.user.id)
@@ -119,15 +119,12 @@ export const Navigation = () => {
 
       // make sure profile exists
       if (!profile) {
-        await supabase.from('admin_users').upsert({ id: data.user.id, is_admin: false });
+        await supabase.from('admin_users').insert({ id: data.user.id, is_admin: false });
+        profile = { is_admin: false } as any;
       }
 
       setShowLoginModal(false);
-      if (profile?.is_admin) {
-        navigate('/dashboard');
-      } else {
-        navigate('/');
-      }
+      navigate(profile.is_admin ? '/dashboard' : '/');
     } catch (err: any) {
       alert(err.message || 'Login failed');
     }
