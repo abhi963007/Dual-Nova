@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '../hooks/use-mobile';
 
 export const Footer = () => {
   const isMobile = useIsMobile();
