@@ -11,7 +11,6 @@ import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Overview from './pages/Overview';
 import Analytics from './pages/Analytics';
-import Team from './pages/Team';
 import Settings from './pages/Settings';
 import OurStory from './pages/OurStory';
 import WebDevelopment from './pages/WebDevelopment';
@@ -57,7 +56,6 @@ function App() {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/overview" element={<Overview />} />
           <Route path="/analytics" element={<Analytics />} />
-          <Route path="/team" element={<Team />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/our-story" element={<OurStory />} />
           <Route path="/user-management" element={<ProtectedRoute requireAdmin={true} requireSuperAdmin={true}><UserManagement /></ProtectedRoute>} />

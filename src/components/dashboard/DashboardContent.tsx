@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Search, Menu, Star, Calendar } from 'lucide-react';
 import { NameCard } from './NameCard';
 import { StatsGraph } from './StatsGraph';
-import { Segmentation } from './Segmentation';
-import { Satisfaction } from './Satisfaction';
 import { EnquiryTable } from './EnquiryTable';
 import { AddComponent } from './AddComponent';
-import { ProjectList } from './ProjectList';
 import { supabase } from '../../lib/supabaseClient';
 
 interface ContentProps {
@@ -199,26 +196,9 @@ export const DashboardContent: React.FC<ContentProps> = ({ onSidebarShow }) => {
           />
         ))}
 
-        {/* Show projects list if there are projects */}
-        {projects.length > 0 && <ProjectList projects={projects} />}
-
         <div className="w-full p-2">
           <div className="rounded-lg bg-[#171717] h-80">
             <StatsGraph />
-          </div>
-        </div>
-
-        {/* Project Types Segmentation */}
-        <div className="w-full p-2 lg:w-1/3">
-          <div className="rounded-lg bg-[#171717] h-80">
-            <Segmentation />
-          </div>
-        </div>
-
-        {/* Customer Satisfaction */}
-        <div className="w-full p-2 lg:w-1/3">
-          <div className="rounded-lg bg-[#171717] h-80">
-            <Satisfaction />
           </div>
         </div>
 

@@ -30,7 +30,6 @@ const sidebarItems: (isSuperAdmin: boolean, adminCount: number, overviewCount: n
     { id: '0', title: 'Dashboard', icon: 'dashboard', notifications: false, href: '/dashboard' },
     { id: '1', title: 'Overview', icon: 'overview', notifications: overviewCount > 0 ? overviewCount : false, href: '/overview' },
     ...(isSuperAdmin ? [{ id: '2', title: 'Analytics', icon: 'analytics', notifications: false, href: '/analytics' }] : []),
-    { id: '3', title: 'Team', icon: 'team', notifications: adminCount > 0 ? adminCount : false, href: '/team' },
     ...(isSuperAdmin ? [{ id: '4', title: 'User Management', icon: 'user_management', notifications: false, href: '/user-management' }] : []),
   ],
   [

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
-import { Menu, Search, UserPlus, Edit2, Trash2, Shield, ShieldOff } from 'lucide-react';
+import { Menu, Search, UserPlus, Edit2, Trash2, Shield, ShieldOff, X } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import { generateUUID } from '../lib/utils';
+import { createTeamMember, toggleAdminStatus as toggleAdminStatusFn, deleteTeamMember } from '../lib/serverFunctions';
 
 interface User {
   id: string;
@@ -118,20 +120,25 @@ const UserManagement = () => {
         return;
       }
 
-      const { error } = await supabase
-        .from('admin_users')
-        .update({ is_admin: !user.is_admin })
-        .eq('id', user.id);
-
-      if (error) throw error;
+      const result = await toggleAdminStatusFn(user.id, !user.is_admin);
       
-      // Update local state
+      if (!result.success) {
+        alert(result.error || 'Failed to update user status');
+        return;
+      }
+      
+      // Update local state immediately for better UX
       setUsers(users.map(u => 
         u.id === user.id ? { ...u, is_admin: !u.is_admin } : u
       ));
-    } catch (error) {
+      
+      // Refresh the user list after a short delay to ensure we have the latest data
+      setTimeout(() => {
+        fetchUsers();
+      }, 1000);
+    } catch (error: any) {
       console.error('Error updating user:', error);
-      alert('Failed to update user status');
+      alert(`Failed to update user status: ${error.message || 'Unknown error'}`);
     }
   };
 
@@ -151,18 +158,23 @@ const UserManagement = () => {
 
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        const { error } = await supabase
-          .from('admin_users')
-          .delete()
-          .eq('id', userId);
-
-        if (error) throw error;
+        const result = await deleteTeamMember(userId);
         
-        // Update local state
+        if (!result.success) {
+          alert(result.error || 'Failed to delete user');
+          return;
+        }
+        
+        // Update local state immediately for better UX
         setUsers(users.filter(u => u.id !== userId));
-      } catch (error) {
+        
+        // Refresh the user list after a short delay to ensure we have the latest data
+        setTimeout(() => {
+          fetchUsers();
+        }, 1000);
+      } catch (error: any) {
         console.error('Error deleting user:', error);
-        alert('Failed to delete user');
+        alert(`Failed to delete user: ${error.message || 'Unknown error'}`);
       }
     }
   };
@@ -178,32 +190,33 @@ const UserManagement = () => {
   const handleSubmitAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Create auth user first
-      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+      const result = await createTeamMember({
+        full_name: formData.full_name,
         email: formData.email,
-        email_confirm: true,
-        user_metadata: { full_name: formData.full_name },
-        password: Math.random().toString(36).slice(-8), // Random password, user will reset
+        department: formData.department,
+        is_admin: formData.is_admin,
       });
 
-      if (authError) throw authError;
-
-      // Then create admin_users entry
-      const { error: profileError } = await supabase
-        .from('admin_users')
-        .insert({
-          id: authData.user.id,
-          full_name: formData.full_name,
-          email: formData.email,
-          department: formData.department,
-          is_admin: formData.is_admin,
-        });
-
-      if (profileError) throw profileError;
+      if (!result.success) {
+        alert(result.error || 'Failed to add user');
+        return;
+      }
 
       // Update UI
-      fetchUsers();
       setShowAddModal(false);
+      
+      // Reset form
+      setFormData({
+        full_name: '',
+        email: '',
+        department: '',
+        is_admin: false,
+      });
+      
+      // Refresh the user list after a short delay
+      setTimeout(() => {
+        fetchUsers();
+      }, 1000);
     } catch (error: any) {
       console.error('Error adding user:', error);
       alert(`Failed to add user: ${error.message}`);
@@ -233,14 +246,18 @@ const UserManagement = () => {
         })
         .eq('id', selectedUser.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating user:', error);
+        alert(`Failed to update user: ${error.message}`);
+        return;
+      }
 
       // Update UI
       fetchUsers();
       setShowEditModal(false);
     } catch (error: any) {
       console.error('Error updating user:', error);
-      alert(`Failed to update user: ${error.message}`);
+      alert(`Failed to update user: ${error.message || 'Unknown error'}`);
     }
   };
 
@@ -263,11 +280,11 @@ const UserManagement = () => {
               >
                 <Menu size={20} />
               </button>
-              <h1 className="text-2xl font-bold text-white">User Management</h1>
+              <h1 className="text-2xl font-bold text-white">User Management ({users.length})</h1>
             </div>
             <div className="flex gap-2">
               <button
-                onClick={handleAddUser}
+                onClick={() => setShowAddModal(true)}
                 className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-colors"
               >
                 <UserPlus size={16} />
