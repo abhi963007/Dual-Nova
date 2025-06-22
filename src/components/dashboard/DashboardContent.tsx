@@ -189,8 +189,8 @@ export const DashboardContent: React.FC<ContentProps> = ({ onSidebarShow }) => {
           </div>
         </div>
 
-        {/* Add Project CTA */}
-        <div className="w-full p-2 lg:w-1/3">
+        {/* Add Project CTA - Changed from lg:w-1/3 to w-full to make it stretch edge to edge */}
+        <div className="w-full p-2">
           <div className="rounded-lg bg-[#171717] overflow-hidden h-80">
             <AddComponent onProjectCreate={handleProjectCreate} />
           </div>
