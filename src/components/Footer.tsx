@@ -68,7 +68,7 @@ export const Footer = () => {
             <div className="text-center space-y-1">
               <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
                 <Mail size={14} />
-                <span>hello@codepiece.dev</span>
+                <span>dualnovalabs@gmail.com</span>
               </div>
               <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
                 <MapPin size={14} />

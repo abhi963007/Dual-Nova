@@ -19,7 +19,7 @@ const Contact = () => {
     {
       icon: Mail,
       title: 'Email Us',
-      details: 'hello@codepiece.dev',
+      details: 'dualnovalabs@gmail.com',
       subtitle: 'Send us an email anytime'
     },
     {

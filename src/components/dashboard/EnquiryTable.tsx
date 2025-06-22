@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabaseClient';
-import { Loader2, ArrowUpDown, ArrowDown, ArrowUp, ChevronDown } from 'lucide-react';
+import { Loader2, ArrowUpDown, ArrowDown, ArrowUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { EnquiryDetailsModal } from './EnquiryDetailsModal';
 
 interface Enquiry {
@@ -26,7 +26,6 @@ export const EnquiryTable: React.FC = () => {
   const [sortField, setSortField] = useState<SortField>('created_at');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [showSortMenu, setShowSortMenu] = useState(false);
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -76,6 +75,8 @@ export const EnquiryTable: React.FC = () => {
       setSortField(field);
       setSortDirection('asc');
     }
+    // Reset to first page when sorting changes
+    setCurrentPage(1);
   };
 
   const getSortIcon = (field: SortField) => {
@@ -122,18 +123,69 @@ export const EnquiryTable: React.FC = () => {
     });
   }, [enquiries, sortField, sortDirection]);
 
-  // Paginated data derived from sorted list
-  const paginatedEnquiries = React.useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return sortedEnquiries.slice(start, start + itemsPerPage);
-  }, [sortedEnquiries, currentPage]);
+  // Calculate pagination
+  const totalPages = Math.ceil((sortedEnquiries?.length || 0) / itemsPerPage);
+  const paginatedEnquiries = sortedEnquiries.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
-  const totalPages = Math.ceil(sortedEnquiries.length / itemsPerPage);
+  const goToNextPage = () => {
+    setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  };
 
-  // Reset page to first whenever the sorted list changes (e.g., after sorting or realtime update)
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [sortedEnquiries]);
+  const goToPreviousPage = () => {
+    setCurrentPage(prev => Math.max(prev - 1, 1));
+  };
+
+  const goToPage = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Generate page numbers to display
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxButtons = 5; // Maximum number of page buttons to show
+    
+    if (totalPages <= maxButtons) {
+      // If total pages are less than or equal to max buttons, show all pages
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      // Always include first page
+      pageNumbers.push(1);
+      
+      // Calculate start and end of middle section
+      let startMiddle = Math.max(2, currentPage - 1);
+      let endMiddle = Math.min(currentPage + 1, totalPages - 1);
+      
+      // Adjust to show up to 3 middle buttons
+      if (startMiddle > endMiddle) {
+        startMiddle = endMiddle;
+      }
+      
+      // Add ellipsis after page 1 if needed
+      if (startMiddle > 2) {
+        pageNumbers.push('...');
+      }
+      
+      // Add middle pages
+      for (let i = startMiddle; i <= endMiddle; i++) {
+        pageNumbers.push(i);
+      }
+      
+      // Add ellipsis before last page if needed
+      if (endMiddle < totalPages - 1) {
+        pageNumbers.push('...');
+      }
+      
+      // Always include last page
+      pageNumbers.push(totalPages);
+    }
+    
+    return pageNumbers;
+  };
 
   if (isLoading) {
     return (
@@ -145,7 +197,7 @@ export const EnquiryTable: React.FC = () => {
 
   return (
     <>
-    <div className="bg-[#171717] rounded-lg p-4 overflow-auto h-80">
+      <div className="bg-[#171717] rounded-lg p-4 overflow-auto h-auto">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-bold text-white">Recent Enquiries</h3>
           
@@ -201,69 +253,96 @@ export const EnquiryTable: React.FC = () => {
           </div>
         </div>
         
-        {sortedEnquiries && sortedEnquiries.length > 0 ? (
-        <table className="min-w-full text-sm text-left text-gray-400">
-          <thead className="text-xs uppercase bg-[#1e1e1e] text-gray-500">
-            <tr>
-                <th scope="col" className="px-4 py-3 cursor-pointer" onClick={() => handleSort('name')}>
-                  Name {getSortIcon('name')}
-                </th>
-                <th scope="col" className="px-4 py-3 cursor-pointer" onClick={() => handleSort('email')}>
-                  Email {getSortIcon('email')}
-                </th>
-                <th scope="col" className="px-4 py-3 cursor-pointer" onClick={() => handleSort('service')}>
-                  Service {getSortIcon('service')}
-                </th>
-                <th scope="col" className="px-4 py-3 cursor-pointer" onClick={() => handleSort('budget')}>
-                  Budget {getSortIcon('budget')}
-                </th>
-                <th scope="col" className="px-4 py-3 cursor-pointer" onClick={() => handleSort('created_at')}>
-                  Date {getSortIcon('created_at')}
-                </th>
-            </tr>
-          </thead>
-          <tbody>
-              {paginatedEnquiries.map((enq: Enquiry) => (
-                <tr 
-                  key={enq.id} 
-                  className="border-b border-gray-700 hover:bg-[#222222] cursor-pointer"
-                  onClick={() => handleRowClick(enq)}
-                >
-                <td className="px-4 py-3 whitespace-nowrap text-white">{enq.name}</td>
-                <td className="px-4 py-3">{enq.email}</td>
-                <td className="px-4 py-3">{enq.service}</td>
-                <td className="px-4 py-3">{enq.budget || '—'}</td>
-                <td className="px-4 py-3">{new Date(enq.created_at).toLocaleDateString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-gray-500">No enquiries yet.</p>
-      )}
-    </div>
-
-      {sortedEnquiries && sortedEnquiries.length > itemsPerPage && (
-        <div className="flex justify-between items-center mt-4">
-          <button
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-3 py-1 rounded-lg bg-[#1e1e1e] text-gray-300 disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <span className="text-sm text-gray-400">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 rounded-lg bg-[#1e1e1e] text-gray-300 disabled:opacity-50"
-          >
-            Next
-          </button>
+        <div className="max-h-[380px] overflow-auto">
+          {sortedEnquiries && sortedEnquiries.length > 0 ? (
+            <table className="min-w-full text-sm text-left text-gray-400">
+              <thead className="text-xs uppercase bg-[#1e1e1e] sticky top-0 z-10 text-gray-500">
+                <tr>
+                  <th scope="col" className="px-4 py-3 cursor-pointer" onClick={() => handleSort('name')}>
+                    Name {getSortIcon('name')}
+                  </th>
+                  <th scope="col" className="px-4 py-3 cursor-pointer" onClick={() => handleSort('email')}>
+                    Email {getSortIcon('email')}
+                  </th>
+                  <th scope="col" className="px-4 py-3 cursor-pointer" onClick={() => handleSort('service')}>
+                    Service {getSortIcon('service')}
+                  </th>
+                  <th scope="col" className="px-4 py-3 cursor-pointer" onClick={() => handleSort('budget')}>
+                    Budget {getSortIcon('budget')}
+                  </th>
+                  <th scope="col" className="px-4 py-3 cursor-pointer" onClick={() => handleSort('created_at')}>
+                    Date {getSortIcon('created_at')}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedEnquiries.map((enq: Enquiry) => (
+                  <tr 
+                    key={enq.id} 
+                    className="border-b border-gray-700 hover:bg-[#222222] cursor-pointer"
+                    onClick={() => handleRowClick(enq)}
+                  >
+                    <td className="px-4 py-3 whitespace-nowrap text-white">{enq.name}</td>
+                    <td className="px-4 py-3">{enq.email}</td>
+                    <td className="px-4 py-3">{enq.service}</td>
+                    <td className="px-4 py-3">{enq.budget || '—'}</td>
+                    <td className="px-4 py-3">{new Date(enq.created_at).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="text-gray-500">No enquiries yet.</p>
+          )}
         </div>
-      )}
+
+        {/* Pagination controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center mt-4 space-x-2">
+            <button
+              onClick={goToPreviousPage}
+              disabled={currentPage === 1}
+              className={`p-2 rounded-md ${currentPage === 1 ? 'text-gray-600 cursor-not-allowed' : 'text-gray-300 hover:bg-[#252525]'}`}
+            >
+              <ChevronLeft size={16} />
+            </button>
+
+            {getPageNumbers().map((pageNum, index) => (
+              <React.Fragment key={index}>
+                {pageNum === '...' ? (
+                  <span className="text-gray-500 px-3">...</span>
+                ) : (
+                  <button
+                    onClick={() => typeof pageNum === 'number' && goToPage(pageNum)}
+                    className={`px-3 py-1 rounded-md ${
+                      currentPage === pageNum
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-300 hover:bg-[#252525]'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                )}
+              </React.Fragment>
+            ))}
+
+            <button
+              onClick={goToNextPage}
+              disabled={currentPage === totalPages}
+              className={`p-2 rounded-md ${currentPage === totalPages ? 'text-gray-600 cursor-not-allowed' : 'text-gray-300 hover:bg-[#252525]'}`}
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        )}
+
+        {/* Page info */}
+        {sortedEnquiries.length > 0 && (
+          <div className="text-center mt-2 text-sm text-gray-500">
+            Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, sortedEnquiries.length)} of {sortedEnquiries.length} enquiries
+          </div>
+        )}
+      </div>
 
       <EnquiryDetailsModal 
         isOpen={isModalOpen}

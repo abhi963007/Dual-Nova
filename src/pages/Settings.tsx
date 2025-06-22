@@ -8,7 +8,7 @@ const Settings = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
   const { toast } = useToast();
-  const [profile, setProfile] = useState({ full_name: '', email: '', phone: '', location: '', department: '', bio: '' });
+  const [profile, setProfile] = useState({ full_name: '', email: '', phone: '', location: '', department: '' });
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -27,7 +27,7 @@ const Settings = () => {
       if (!session) { setLoadingProfile(false); return; }
       const { data, error } = await supabase.from('admin_users').select('*').eq('id', session.user.id).single();
       if (error) { console.error(error); toast({ title: 'Error loading profile' }); }
-      if (data) setProfile({ full_name: data.full_name || '', email: data.email || '', phone: data.phone || '', location: data.location || '', department: data.department || '', bio: data.bio || '' });
+      if (data) setProfile({ full_name: data.full_name || '', email: data.email || '', phone: data.phone || '', location: data.location || '', department: data.department || '' });
       setLoadingProfile(false);
     };
     loadProfile();
@@ -37,10 +37,49 @@ const Settings = () => {
     setSaving(true);
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { toast({ title: 'Not signed in' }); setSaving(false); return; }
-    const updates = { ...profile, updated_at: new Date().toISOString() };
-    const { error } = await supabase.from('admin_users').update(updates).eq('id', session.user.id);
-    if (error) { console.error(error); toast({ title: 'Error saving profile', description: error.message, variant: 'destructive' }); }
-    else { toast({ title: 'Profile updated' }); }
+    // Build updates object dynamically – only include changed/non-empty fields
+    const updates: Record<string, any> = {};
+    if (profile.full_name.trim()) updates.full_name = profile.full_name.trim();
+    if (profile.email) updates.email = profile.email;
+    if (profile.phone !== undefined) updates.phone = profile.phone || null;
+    if (profile.location !== undefined) updates.location = profile.location || null;
+    if (profile.department !== undefined) updates.department = profile.department || null;
+
+    if (Object.keys(updates).length === 0) {
+      toast({ title: 'Nothing to save', description: 'No changes detected.' });
+      setSaving(false);
+      return;
+    }
+    const { data: updatedRows, error } = await supabase
+      .from('admin_users')
+      .update(updates)
+      .eq('id', session.user.id)
+      .select();
+
+    console.log('Supabase update payload', updates, 'updatedRows', updatedRows);
+
+
+    if (error) {
+      console.error('Error saving profile:', error?.details || error?.message || error);
+      toast({ title: 'Error saving profile', description: error.message, variant: 'destructive' });
+    }
+    else if (!updatedRows || updatedRows.length === 0) {
+      toast({ title: 'No changes saved', description: 'Profile was already up to date.' });
+    }
+    else {
+      // Refetch the latest profile row to sync UI
+      const returned = Array.isArray(updatedRows) ? updatedRows[0] : updatedRows;
+      if (returned) {
+        setProfile({
+          full_name: returned.full_name || '',
+          email: returned.email || '',
+          phone: returned.phone || '',
+          location: returned.location || '',
+          department: returned.department || '',
+        });
+      }
+      toast({ title: 'Profile updated successfully' });
+    }
     setSaving(false);
   };
 
@@ -146,13 +185,46 @@ const Settings = () => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-2">Bio</label>
+                        
                         <textarea
-                          rows={3}
-                          value={profile.bio}
-                          onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+
+
+
                           className="w-full px-3 py-2 bg-[#2d2d2d] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-400 mb-2">Phone</label>
+                        <input
+                          type="tel"
+                          value={profile.phone}
+                          onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                          className="w-full px-3 py-2 bg-[#2d2d2d] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-400 mb-2">Location</label>
+                        <input
+                          type="text"
+                          value={profile.location}
+                          onChange={(e) => setProfile({ ...profile, location: e.target.value })}
+                          className="w-full px-3 py-2 bg-[#2d2d2d] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-400 mb-2">Department</label>
+                        <select
+                          value={profile.department}
+                          onChange={(e) => setProfile({ ...profile, department: e.target.value })}
+                          className="w-full px-3 py-2 bg-[#2d2d2d] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Select Department</option>
+                          <option value="Engineering">Engineering</option>
+                          <option value="Marketing">Marketing</option>
+                          <option value="Sales">Sales</option>
+                          <option value="HR">HR</option>
+                          <option value="Operations">Operations</option>
+                        </select>
                       </div>
                     </div>
                   </div>
