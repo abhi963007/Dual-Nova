@@ -134,6 +134,8 @@ export const Footer = () => {
                 <div className="flex items-center space-x-2 text-sm text-gray-400">
                   <Phone size={14} />
                   <span>+91 7306364765</span>
+                  <span>,</span>
+                  <span>+91 9072783958</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-400">
                   <MapPin size={14} />
