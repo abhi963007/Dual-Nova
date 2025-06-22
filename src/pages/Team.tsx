@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
-import { Menu, Plus, Search, UserCircle, Loader, Calendar, Clock, Mail, Phone, MapPin, Briefcase, UserCog } from 'lucide-react';
+import { Menu, Plus, Search, UserCircle, Loader, Calendar, Clock, Mail, Phone, MapPin, Briefcase, UserCog, X } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 
 // Define a minimal type with only the fields we know exist
@@ -25,51 +25,63 @@ const Team = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [formData, setFormData] = useState({
+    full_name: '',
+    email: '',
+    phone: '',
+    location: '',
+    department: '',
+    is_admin: false,
+  });
+  const [formError, setFormError] = useState<string | null>(null);
+  const [formLoading, setFormLoading] = useState(false);
 
   const superAdmins = ['Abhiram', 'Rojin', 'Arjun'];
 
-  // Fetch user data
-  useEffect(() => {
-    const fetchAdminUsers = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // First, check if current user is a super admin
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          const { data: currentUser } = await supabase
-            .from('admin_users')
-            .select('full_name')
-            .eq('id', session.user.id)
-            .single();
-          
-          setIsSuperAdmin(currentUser?.full_name && superAdmins.includes(currentUser.full_name));
-        }
-
-        // Fetch all admin users
-        const { data, error } = await supabase
+  // Function to fetch admin users
+  const fetchAdminUsers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // First, check if current user is a super admin
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: currentUser } = await supabase
           .from('admin_users')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) {
-          console.error('Error fetching admin users:', error);
-          setError('Failed to load team members. Please try again later.');
-          return;
-        }
-
-        console.log('Admin users data:', data);
-        setAdminUsers(data || []);
+          .select('full_name')
+          .eq('id', session.user.id)
+          .single();
         
-      } catch (error) {
-        console.error('Error:', error);
-        setError('An unexpected error occurred. Please try again.');
-      } finally {
-        setLoading(false);
+        setIsSuperAdmin(currentUser?.full_name && superAdmins.includes(currentUser.full_name));
       }
-    };
 
+      // Fetch all admin users
+      const { data, error } = await supabase
+        .from('admin_users')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching admin users:', error);
+        setError('Failed to load team members. Please try again later.');
+        return;
+      }
+
+      console.log('Admin users data:', data);
+      setAdminUsers(data || []);
+      
+    } catch (error) {
+      console.error('Error:', error);
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch user data on component mount
+  useEffect(() => {
     fetchAdminUsers();
   }, []);
 
@@ -87,6 +99,85 @@ const Team = () => {
     if (!dateString) return 'Never';
     const date = new Date(dateString);
     return date.toLocaleDateString();
+  };
+
+  // Handle form input changes
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target as HTMLInputElement;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+    });
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError(null);
+    setFormLoading(true);
+
+    try {
+      if (!formData.full_name || !formData.email) {
+        setFormError('Name and email are required');
+        setFormLoading(false);
+        return;
+      }
+
+      // Create auth user first (this would normally be done through an admin API)
+      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+        email: formData.email,
+        email_confirm: true,
+        user_metadata: { full_name: formData.full_name },
+        password: Math.random().toString(36).slice(-8), // Random password, user will reset
+      });
+
+      if (authError) {
+        console.error('Auth error:', authError);
+        setFormError(authError.message);
+        setFormLoading(false);
+        return;
+      }
+
+      // Then create admin_users entry
+      const { error: profileError } = await supabase
+        .from('admin_users')
+        .insert({
+          id: authData.user.id,
+          full_name: formData.full_name,
+          email: formData.email,
+          phone: formData.phone || null,
+          location: formData.location || null,
+          department: formData.department || null,
+          is_admin: formData.is_admin,
+        });
+
+      if (profileError) {
+        console.error('Profile error:', profileError);
+        setFormError(profileError.message);
+        setFormLoading(false);
+        return;
+      }
+
+      // Success - close modal and refresh
+      setShowAddModal(false);
+      fetchAdminUsers();
+      
+      // Reset form
+      setFormData({
+        full_name: '',
+        email: '',
+        phone: '',
+        location: '',
+        department: '',
+        is_admin: false,
+      });
+      
+    } catch (error: any) {
+      console.error('Error adding user:', error);
+      setFormError(error.message || 'An unexpected error occurred');
+    } finally {
+      setFormLoading(false);
+    }
   };
 
   return (
@@ -120,7 +211,10 @@ const Team = () => {
                   Manage Users
                 </Link>
               )}
-              <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-colors">
+              <button 
+                onClick={() => setShowAddModal(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-colors"
+              >
                 <Plus size={16} />
                 Add Member
               </button>
@@ -299,6 +393,141 @@ const Team = () => {
           </div>
         </div>
       </div>
+
+      {/* Add Member Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-[#171717] rounded-xl border border-gray-800 p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-white">Add Team Member</h2>
+              <button 
+                onClick={() => setShowAddModal(false)}
+                className="p-1 hover:bg-gray-800 rounded-full"
+              >
+                <X size={20} className="text-gray-400" />
+              </button>
+            </div>
+            
+            {formError && (
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg text-red-200 text-sm">
+                {formError}
+              </div>
+            )}
+            
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-1">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="full_name"
+                    value={formData.full_name}
+                    onChange={handleFormChange}
+                    required
+                    className="w-full px-4 py-2 bg-[#1e1e1e] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-1">
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleFormChange}
+                    required
+                    className="w-full px-4 py-2 bg-[#1e1e1e] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-1">
+                    Phone
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleFormChange}
+                    className="w-full px-4 py-2 bg-[#1e1e1e] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-1">
+                    Location
+                  </label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleFormChange}
+                    className="w-full px-4 py-2 bg-[#1e1e1e] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-1">
+                    Department
+                  </label>
+                  <input
+                    type="text"
+                    name="department"
+                    value={formData.department}
+                    onChange={handleFormChange}
+                    className="w-full px-4 py-2 bg-[#1e1e1e] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                {isSuperAdmin && (
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="is_admin"
+                      name="is_admin"
+                      checked={formData.is_admin}
+                      onChange={handleFormChange}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-700 rounded bg-gray-900"
+                    />
+                    <label htmlFor="is_admin" className="ml-2 block text-sm text-gray-400">
+                      Admin Access
+                    </label>
+                  </div>
+                )}
+                
+                <div className="flex justify-end gap-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowAddModal(false)}
+                    className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+                    disabled={formLoading}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition-colors flex items-center gap-2"
+                    disabled={formLoading}
+                  >
+                    {formLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                        <span>Adding...</span>
+                      </>
+                    ) : (
+                      <span>Add Member</span>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
