@@ -131,13 +131,40 @@ const Contact = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {contactInfo.map((info, index) => {
               const Icon = info.icon;
+              
+              // Create clickable links for email and phone
+              let clickableContent;
+              if (info.title === 'Email Us') {
+                clickableContent = (
+                  <a 
+                    href={`mailto:${info.details}`}
+                    className="text-blue-400 font-medium mb-1 hover:text-blue-300 transition-colors duration-300 inline-flex items-center"
+                  >
+                    {info.details}
+                  </a>
+                );
+              } else if (info.title === 'Call Us') {
+                clickableContent = (
+                  <a 
+                    href={`tel:${info.details.replace(/\s+/g, '')}`}
+                    className="text-blue-400 font-medium mb-1 hover:text-blue-300 transition-colors duration-300 inline-flex items-center"
+                  >
+                    {info.details}
+                  </a>
+                );
+              } else {
+                clickableContent = (
+                  <p className="text-blue-400 font-medium mb-1">{info.details}</p>
+                );
+              }
+              
               return (
                 <div key={index} className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 rounded-2xl p-6 backdrop-blur-sm border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 text-center group">
                   <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-all duration-300 border border-blue-500/20">
                     <Icon size={28} className="text-blue-400" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 text-white">{info.title}</h3>
-                  <p className="text-blue-400 font-medium mb-1">{info.details}</p>
+                  {clickableContent}
                   <p className="text-gray-400 text-sm">{info.subtitle}</p>
                 </div>
               );

@@ -66,13 +66,15 @@ export const Footer = () => {
 
             {/* Contact Info */}
             <div className="text-center space-y-1">
-              <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
-                <Mail size={14} />
-                <span>dualnovalabs@gmail.com</span>
+              <div className="flex items-center justify-center space-x-2 text-sm">
+                <Mail size={14} className="text-gray-400" />
+                <a href="mailto:dualnovalabs@gmail.com" className="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+                  dualnovalabs@gmail.com
+                </a>
               </div>
-              <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
-                <MapPin size={14} />
-                <span>Kochi, Kerala, India</span>
+              <div className="flex items-center justify-center space-x-2 text-sm">
+                <MapPin size={14} className="text-gray-400" />
+                <span className="text-gray-400">Kochi, Kerala, India</span>
               </div>
             </div>
           </div>
@@ -123,15 +125,15 @@ export const Footer = () => {
             <div>
               <h4 className="text-sm font-semibold mb-3 text-gray-300">Contact</h4>
               <div className="space-y-2">
-                <div className="flex items-center space-x-2 text-sm text-gray-400">
-                  <Mail size={14} />
-                  <span>dualnovalabs@gmail.com</span>
+                <div className="flex items-center space-x-2 text-sm">
+                  <Mail size={14} className="text-gray-400" />
+                  <a href="mailto:dualnovalabs@gmail.com" className="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+                    dualnovalabs@gmail.com
+                  </a>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-400">
                   <Phone size={14} />
                   <span>+91 7306364765</span>
-                  <span>,</span>
-                  <span>+91 9072783958</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-400">
                   <MapPin size={14} />

@@ -1,13 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
-import { ExternalLink, Github, Calendar, Tag } from 'lucide-react';
+import { ExternalLink, Github, Calendar, Tag, ChevronDown, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useIsMobile } from '../hooks/use-mobile';
 
 const Projects = () => {
   const [activeFilter, setActiveFilter] = useState('All');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   const filters = ['All', 'Web Development', 'Mobile App', 'E-commerce', 'SaaS', 'AI/ML', 'Computer Vision', 'Healthcare', 'Security'];
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const projects = [
     {
@@ -325,28 +343,84 @@ const Projects = () => {
       {/* Filter Section */}
       <section className="py-8 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {filters.map((filter) => (
+          {/* Mobile Dropdown Filter */}
+          {isMobile ? (
+            <div className="relative mb-8" ref={dropdownRef}>
               <button
-                key={filter}
-                onClick={() => setActiveFilter(filter)}
-                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
-                  activeFilter === filter
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
-                }`}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="w-full flex items-center justify-between px-6 py-3 bg-gradient-to-br from-gray-800 to-gray-900 text-white rounded-lg border border-gray-700 focus:outline-none shadow-md"
               >
-                {filter}
+                <div className="flex items-center">
+                  <Filter size={16} className="mr-2 text-blue-400" />
+                  <span className="font-medium">{activeFilter}</span>
+                  {activeFilter !== 'All' && (
+                    <span className="ml-2 text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">
+                      {filteredProjects.length} projects
+                    </span>
+                  )}
+                </div>
+                <ChevronDown size={16} className={`text-blue-400 transition-transform duration-300 ${isDropdownOpen ? 'transform rotate-180' : ''}`} />
               </button>
-            ))}
-          </div>
+              
+              {isDropdownOpen && (
+                <div className="absolute z-10 mt-2 w-full bg-gray-800 border border-gray-700 rounded-lg shadow-lg overflow-hidden max-h-64 overflow-y-auto">
+                  {filters.map((filter) => (
+                    <button
+                      key={filter}
+                      onClick={() => {
+                        setActiveFilter(filter);
+                        setIsDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-6 py-3 transition-colors duration-200 flex items-center justify-between ${
+                        activeFilter === filter
+                          ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
+                          : 'text-gray-300 hover:bg-gray-700'
+                      }`}
+                    >
+                      <span>{filter}</span>
+                      {filter !== 'All' && (
+                        <span className="text-xs bg-black/30 px-2 py-0.5 rounded-full">
+                          {projects.filter(p => p.category === filter).length}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            /* Desktop Filter Buttons */
+            <div className="flex flex-wrap justify-center gap-4 mb-12">
+              {filters.map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                    activeFilter === filter
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
+                  }`}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
       {/* Projects Grid */}
-      <section className="py-12 px-6">
+      <section className="py-8 md:py-12 px-4 md:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {isMobile && filteredProjects.length > 0 && (
+            <div className="mb-4 text-center">
+              <span className="text-sm text-gray-400">
+                Showing {filteredProjects.length} {filteredProjects.length === 1 ? 'project' : 'projects'}
+                {activeFilter !== 'All' ? ` in ${activeFilter}` : ''}
+              </span>
+            </div>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {filteredProjects.map((project, index) => (
               <div key={index} className="group bg-gradient-to-br from-gray-900/50 to-gray-800/30 rounded-2xl overflow-hidden backdrop-blur-sm border border-gray-700/50 hover:border-blue-500/50 transition-all duration-500 hover:scale-105">
                 <div className="relative overflow-hidden">
@@ -364,7 +438,7 @@ const Projects = () => {
                   </div>
                 </div>
                 
-                <div className="p-6">
+                <div className="p-4 md:p-6">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-2 text-sm text-blue-400">
                       <Tag size={14} />
@@ -372,38 +446,43 @@ const Projects = () => {
                     </div>
                   </div>
                   
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-blue-400 transition-colors duration-300">
+                  <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3 group-hover:text-blue-400 transition-colors duration-300 line-clamp-1">
                     {project.title}
                   </h3>
                   
-                  <p className="text-gray-400 mb-4 leading-relaxed">
+                  <p className="text-gray-400 mb-3 md:mb-4 leading-relaxed text-sm md:text-base line-clamp-3">
                     {project.description}
                   </p>
                   
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.technologies.map((tech, techIndex) => (
+                  <div className="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
+                    {project.technologies.slice(0, isMobile ? 3 : project.technologies.length).map((tech, techIndex) => (
                       <span 
                         key={techIndex}
-                        className="px-3 py-1 bg-gray-800/50 text-gray-300 text-sm rounded-full border border-gray-700"
+                        className="px-2 md:px-3 py-0.5 md:py-1 bg-gray-800/50 text-gray-300 text-xs md:text-sm rounded-full border border-gray-700"
                       >
                         {tech}
                       </span>
                     ))}
+                    {isMobile && project.technologies.length > 3 && (
+                      <span className="px-2 py-0.5 bg-gray-800/50 text-gray-400 text-xs rounded-full border border-gray-700">
+                        +{project.technologies.length - 3}
+                      </span>
+                    )}
                   </div>
                   
-                  <div className="flex gap-3">
+                  <div className="flex gap-2 md:gap-3">
                     <a 
                       href={project.liveUrl}
-                      className="flex-1 flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
+                      className="flex-1 flex items-center justify-center space-x-1 md:space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 md:px-4 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 text-sm md:text-base"
                     >
-                      <ExternalLink size={16} />
+                      <ExternalLink size={isMobile ? 14 : 16} />
                       <span>Live Demo</span>
                     </a>
                     <a 
                       href={project.githubUrl}
-                      className="flex items-center justify-center bg-gray-800 text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-300"
+                      className="flex items-center justify-center bg-gray-800 text-gray-300 px-3 md:px-4 py-2 rounded-lg hover:bg-gray-700 hover:text-white transition-all duration-300"
                     >
-                      <Github size={16} />
+                      <Github size={isMobile ? 14 : 16} />
                     </a>
                   </div>
                 </div>
