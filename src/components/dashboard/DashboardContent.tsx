@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Menu, Star, Calendar } from 'lucide-react';
-import { NameCard } from './NameCard';
 import { StatsGraph } from './StatsGraph';
 import { EnquiryTable } from './EnquiryTable';
 import { AddComponent } from './AddComponent';
@@ -183,18 +182,6 @@ export const DashboardContent: React.FC<ContentProps> = ({ onSidebarShow }) => {
         <div className="w-full p-2">
           <EnquiryTable />
         </div>
-
-        {teamMembers.map((member) => (
-          <NameCard
-            key={member.id}
-            name={member.name || ''}
-            position={member.position || ''}
-            transactions={member.transactions || 0}
-            rise={member.rise || false}
-            tasksCompleted={member.tasksCompleted || 0}
-            imgId={member.imgId || 0}
-          />
-        ))}
 
         <div className="w-full p-2">
           <div className="rounded-lg bg-[#171717] h-80">
