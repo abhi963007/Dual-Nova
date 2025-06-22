@@ -30,6 +30,7 @@ import QualityFirst from './pages/QualityFirst';
 import Tasks from './pages/Tasks';
 import Reports from './pages/Reports';
 import Chat from './pages/Chat';
+import UserManagement from './pages/UserManagement';
 
 // ScrollToTop component that will reset scroll position on page navigation
 function ScrollToTop() {
@@ -59,6 +60,7 @@ function App() {
           <Route path="/team" element={<Team />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/our-story" element={<OurStory />} />
+          <Route path="/user-management" element={<ProtectedRoute requireAdmin={true} requireSuperAdmin={true}><UserManagement /></ProtectedRoute>} />
           
           {/* Individual Service Pages */}
           <Route path="/services/web-development" element={<WebDevelopment />} />

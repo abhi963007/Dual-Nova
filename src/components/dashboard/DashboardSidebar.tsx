@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Users, FileText, Settings, Code, BarChart2 } from 'lucide-react';
+import { X, User, Users, FileText, Settings, Code, BarChart2, UserCog } from 'lucide-react';
 import { useSpring, animated, config } from '@react-spring/web';
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
@@ -31,6 +31,7 @@ const sidebarItems: (isSuperAdmin: boolean, adminCount: number, overviewCount: n
     { id: '1', title: 'Overview', icon: 'overview', notifications: overviewCount > 0 ? overviewCount : false, href: '/overview' },
     ...(isSuperAdmin ? [{ id: '2', title: 'Analytics', icon: 'analytics', notifications: false, href: '/analytics' }] : []),
     { id: '3', title: 'Team', icon: 'team', notifications: adminCount > 0 ? adminCount : false, href: '/team' },
+    ...(isSuperAdmin ? [{ id: '4', title: 'User Management', icon: 'user_management', notifications: false, href: '/user-management' }] : []),
   ],
   [
     { id: '6', title: 'Settings', icon: 'settings', notifications: false, href: '/settings' },
@@ -226,6 +227,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, isActive }) => {
       analytics: BarChart2,
       team: Users,
       settings: Settings,
+      user_management: UserCog,
     };
     const IconComponent = iconMap[iconName as keyof typeof iconMap] || Code;
     return <IconComponent size={20} />;

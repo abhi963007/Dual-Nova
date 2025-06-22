@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
-import { Menu, Plus, Search, UserCircle, Loader, Calendar, Clock, Mail, Phone, MapPin, Briefcase } from 'lucide-react';
+import { Menu, Plus, Search, UserCircle, Loader, Calendar, Clock, Mail, Phone, MapPin, Briefcase, UserCog } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 
 // Define a minimal type with only the fields we know exist
@@ -110,10 +110,21 @@ const Team = () => {
               </button>
               <h1 className="text-2xl font-bold text-white">Team ({adminUsers.length})</h1>
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-colors">
-              <Plus size={16} />
-              Add Member
-            </button>
+            <div className="flex gap-2">
+              {isSuperAdmin && (
+                <Link
+                  to="/user-management"
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors"
+                >
+                  <UserCircle size={16} />
+                  Manage Users
+                </Link>
+              )}
+              <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-colors">
+                <Plus size={16} />
+                Add Member
+              </button>
+            </div>
           </div>
 
           {/* Main Content */}
