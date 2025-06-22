@@ -1,4 +1,4 @@
-import { supabase } from './supabaseClient';
+import { supabase, isSupabaseConfigured } from './supabaseClient';
 import { generateUUID } from './utils';
 
 // Function to create a new team member
@@ -13,6 +13,10 @@ export const createTeamMember = async (
   }
 ) => {
   try {
+    if (!isSupabaseConfigured) {
+      throw new Error('Supabase is not configured. Please set up your environment variables.');
+    }
+
     // First, check if the current user is authenticated
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
@@ -107,6 +111,10 @@ export const createTeamMember = async (
 // Function to toggle admin status
 export const toggleAdminStatus = async (userId: string, isAdmin: boolean) => {
   try {
+    if (!isSupabaseConfigured) {
+      throw new Error('Supabase is not configured. Please set up your environment variables.');
+    }
+
     // First, check if the current user is authenticated
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
@@ -155,6 +163,10 @@ export const toggleAdminStatus = async (userId: string, isAdmin: boolean) => {
 // Function to delete a team member
 export const deleteTeamMember = async (userId: string) => {
   try {
+    if (!isSupabaseConfigured) {
+      throw new Error('Supabase is not configured. Please set up your environment variables.');
+    }
+
     // First, check if the current user is authenticated
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
@@ -197,4 +209,4 @@ export const deleteTeamMember = async (userId: string) => {
       error: error.message || 'Failed to delete team member' 
     };
   }
-}; 
+};

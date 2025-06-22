@@ -1,3 +1,4 @@
+
 import { createClient } from '@supabase/supabase-js';
 
 // These values should be set in your environment (e.g. Netlify site settings)
@@ -5,13 +6,19 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Check if Supabase environment variables are configured
+const isSupabaseConfigured = supabaseUrl && supabaseAnonKey;
+
+// Create a mock client or real client based on configuration
+export const supabase = isSupabaseConfigured 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : createClient('https://placeholder.supabase.co', 'placeholder-key');
 
 // Admin-related functions
 export const adminFunctions = {
   // Check if a user is an admin
   isAdmin: async (userId: string) => {
-    if (!userId) return false;
+    if (!isSupabaseConfigured || !userId) return false;
     
     const { data, error } = await supabase
       .from('admin_users')
@@ -25,7 +32,7 @@ export const adminFunctions = {
 
   // Check if a user is a super admin
   isSuperAdmin: async (userId: string, superAdminNames: string[] = ['Abhiram', 'Rojin', 'Arjun']) => {
-    if (!userId) return false;
+    if (!isSupabaseConfigured || !userId) return false;
     
     const { data, error } = await supabase
       .from('admin_users')
@@ -39,6 +46,8 @@ export const adminFunctions = {
 
   // Get all admin users
   getAdminUsers: async () => {
+    if (!isSupabaseConfigured) return [];
+    
     const { data, error } = await supabase
       .from('admin_users')
       .select('*')
@@ -55,6 +64,10 @@ export const adminFunctions = {
 
   // Toggle admin status
   toggleAdminStatus: async (userId: string, isAdmin: boolean) => {
+    if (!isSupabaseConfigured) {
+      throw new Error('Supabase is not configured');
+    }
+    
     const { data, error } = await supabase
       .from('admin_users')
       .update({ is_admin: isAdmin })
@@ -68,3 +81,6 @@ export const adminFunctions = {
     return data;
   }
 };
+
+// Export configuration status for components to check
+export { isSupabaseConfigured };
