@@ -26,6 +26,9 @@ export const EnquiryTable: React.FC = () => {
   const [sortField, setSortField] = useState<SortField>('created_at');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [showSortMenu, setShowSortMenu] = useState(false);
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const { data: enquiries, isLoading } = useQuery({
     queryKey: ['enquiries'],
@@ -119,6 +122,19 @@ export const EnquiryTable: React.FC = () => {
     });
   }, [enquiries, sortField, sortDirection]);
 
+  // Paginated data derived from sorted list
+  const paginatedEnquiries = React.useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return sortedEnquiries.slice(start, start + itemsPerPage);
+  }, [sortedEnquiries, currentPage]);
+
+  const totalPages = Math.ceil(sortedEnquiries.length / itemsPerPage);
+
+  // Reset page to first whenever the sorted list changes (e.g., after sorting or realtime update)
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [sortedEnquiries]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-40 bg-[#171717] rounded-lg">
@@ -207,7 +223,7 @@ export const EnquiryTable: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-              {sortedEnquiries.map((enq: Enquiry) => (
+              {paginatedEnquiries.map((enq: Enquiry) => (
                 <tr 
                   key={enq.id} 
                   className="border-b border-gray-700 hover:bg-[#222222] cursor-pointer"
@@ -226,6 +242,28 @@ export const EnquiryTable: React.FC = () => {
         <p className="text-gray-500">No enquiries yet.</p>
       )}
     </div>
+
+      {sortedEnquiries && sortedEnquiries.length > itemsPerPage && (
+        <div className="flex justify-between items-center mt-4">
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 rounded-lg bg-[#1e1e1e] text-gray-300 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span className="text-sm text-gray-400">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded-lg bg-[#1e1e1e] text-gray-300 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       <EnquiryDetailsModal 
         isOpen={isModalOpen}

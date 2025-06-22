@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
-import { Menu, User, Bell, Shield, Palette, Globe, Save } from 'lucide-react';
+import { Menu, User, Bell, Shield, Globe, Save } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { useToast } from '../hooks/use-toast';
 
@@ -16,7 +16,7 @@ const Settings = () => {
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'security', label: 'Security', icon: Shield },
-    { id: 'appearance', label: 'Appearance', icon: Palette },
+    
     { id: 'general', label: 'General', icon: Globe },
   ];
 
