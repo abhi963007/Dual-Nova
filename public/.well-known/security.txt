@@ -1,0 +1,4 @@
+Contact: mailto:dualnovalabs@gmail.com
+Expires: 2025-08-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://www.dualnova.shop/.well-known/security.txt 

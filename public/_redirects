@@ -1,1 +1,5 @@
+# Redirect domain aliases to primary domain
+https://dualnova.shop/* https://www.dualnova.shop/:splat 301!
+
+# Handle SPA routing
 /* /index.html 200 

@@ -6,6 +6,23 @@
   NODE_VERSION = "18.16.0"
   NPM_FLAGS = "--legacy-peer-deps"
 
+# Custom domain configuration
+[context.production]
+  environment = { SITE_URL = "https://www.dualnova.shop" }
+
+# Force HTTPS for all requests
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+
+# Redirect from apex domain to www subdomain
+[[redirects]]
+  from = "https://dualnova.shop/*"
+  to = "https://www.dualnova.shop/:splat"
+  status = 301
+  force = true
+
 # Redirect all routes to index.html for SPA
 [[redirects]]
   from = "/*"
