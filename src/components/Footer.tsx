@@ -73,6 +73,16 @@ export const Footer = () => {
                 </a>
               </div>
               <div className="flex items-center justify-center space-x-2 text-sm">
+                <Phone size={14} className="text-gray-400" />
+                <a href="tel:+917306364765" className="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+                  +91 7306364765
+                </a>
+                <span className="text-gray-400">,</span>
+                <a href="tel:+919072783958" className="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+                  +91 9072783958
+                </a>
+              </div>
+              <div className="flex items-center justify-center space-x-2 text-sm">
                 <MapPin size={14} className="text-gray-400" />
                 <span className="text-gray-400">Kochi, Kerala, India</span>
               </div>
@@ -131,11 +141,15 @@ export const Footer = () => {
                     dualnovalabs@gmail.com
                   </a>
                 </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-400">
-                  <Phone size={14} />
-                  <span>+91 7306364765</span>
-                  <span>,</span>
-                  <span>+91 9072783958</span>
+                <div className="flex items-center space-x-2 text-sm">
+                  <Phone size={14} className="text-gray-400" />
+                  <a href="tel:+917306364765" className="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+                    +91 7306364765
+                  </a>
+                  <span className="text-gray-400">,</span>
+                  <a href="tel:+919072783958" className="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+                    +91 9072783958
+                  </a>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-400">
                   <MapPin size={14} />

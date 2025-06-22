@@ -144,13 +144,24 @@ const Contact = () => {
                   </a>
                 );
               } else if (info.title === 'Call Us') {
+                // Split phone numbers and make each one clickable
+                const phoneNumbers = info.details.split(',').map(num => num.trim());
                 clickableContent = (
-                  <a 
-                    href={`tel:${info.details.replace(/\s+/g, '')}`}
-                    className="text-blue-400 font-medium mb-1 hover:text-blue-300 transition-colors duration-300 inline-flex items-center"
-                  >
-                    {info.details}
-                  </a>
+                  <div className="flex justify-center items-center space-x-2">
+                    <a 
+                      href={`tel:+91${phoneNumbers[0]}`}
+                      className="text-blue-400 font-medium hover:text-blue-300 transition-colors duration-300"
+                    >
+                      {phoneNumbers[0]}
+                    </a>
+                    <span className="text-blue-400">,</span>
+                    <a 
+                      href={`tel:+91${phoneNumbers[1]}`}
+                      className="text-blue-400 font-medium hover:text-blue-300 transition-colors duration-300"
+                    >
+                      {phoneNumbers[1]}
+                    </a>
+                  </div>
                 );
               } else {
                 clickableContent = (

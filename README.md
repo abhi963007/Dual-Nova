@@ -1,73 +1,75 @@
-# Welcome to your Lovable project
+# 🚀 Dual Nova Lab
 
-## Project info
+![Dual Nova Lab](public/logo1.jpg)
 
-**URL**: https://lovable.dev/projects/9908e3e6-0180-4bbb-8004-c32429593ebf
+## ✨ Overview
 
-## How can I edit this code?
+Dual Nova Lab is a modern web development agency specializing in creating innovative digital solutions. Our team of skilled developers and designers craft beautiful, functional websites and applications tailored to meet your business needs.
 
-There are several ways of editing your application.
+## 🛠️ Tech Stack
 
-**Use Lovable**
+- **Frontend**: React, TypeScript, Vite
+- **Styling**: Tailwind CSS, shadcn/ui
+- **Backend**: Supabase
+- **Deployment**: Netlify
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/9908e3e6-0180-4bbb-8004-c32429593ebf) and start prompting.
+## 🔥 Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Responsive Design**: Optimized for all devices
+- **Modern UI/UX**: Beautiful, intuitive interfaces
+- **Dashboard**: Client project management and analytics
+- **Enquiry System**: Streamlined client communication
+- **Performance Optimized**: Fast loading and rendering
 
-**Use your preferred IDE**
+## 📋 Services
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Web Development
+- Mobile App Development
+- UI/UX Design
+- API Development
+- Cloud Integration
+- DevOps Automation
+- AI/ML Solutions
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🚀 Getting Started
 
-Follow these steps:
+### Prerequisites
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- Node.js (v16+)
+- npm or Bun
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Installation
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/dual-nova.git
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Navigate to project directory
+cd dual-nova
+
+# Install dependencies
+npm install
+# or
+bun install
+
+# Start development server
 npm run dev
+# or
+bun dev
 ```
 
-**Edit a file directly in GitHub**
+Visit `http://localhost:8082` in your browser to see the application.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📱 Contact Us
 
-**Use GitHub Codespaces**
+- **Email**: [dualnovalabs@gmail.com](mailto:dualnovalabs@gmail.com)
+- **Phone**: +91 7306364765, +91 9072783958
+- **Location**: Kochi, Kerala, India
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 📄 License
 
-## What technologies are used for this project?
+© 2024 Dual Nova Lab. All rights reserved.
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/9908e3e6-0180-4bbb-8004-c32429593ebf) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+<p align="center">Made with ❤️ by Dual Nova Lab</p>
