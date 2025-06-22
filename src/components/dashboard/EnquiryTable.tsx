@@ -255,9 +255,9 @@ export const EnquiryTable: React.FC = () => {
         
         <div className="max-h-[380px] overflow-auto">
           {sortedEnquiries && sortedEnquiries.length > 0 ? (
-            <table className="min-w-full text-sm text-left text-gray-400">
+        <table className="min-w-full text-sm text-left text-gray-400">
               <thead className="text-xs uppercase bg-[#1e1e1e] sticky top-0 z-10 text-gray-500">
-                <tr>
+            <tr>
                   <th scope="col" className="px-4 py-3 cursor-pointer" onClick={() => handleSort('name')}>
                     Name {getSortIcon('name')}
                   </th>
@@ -273,28 +273,28 @@ export const EnquiryTable: React.FC = () => {
                   <th scope="col" className="px-4 py-3 cursor-pointer" onClick={() => handleSort('created_at')}>
                     Date {getSortIcon('created_at')}
                   </th>
-                </tr>
-              </thead>
-              <tbody>
+            </tr>
+          </thead>
+          <tbody>
                 {paginatedEnquiries.map((enq: Enquiry) => (
                   <tr 
                     key={enq.id} 
                     className="border-b border-gray-700 hover:bg-[#222222] cursor-pointer"
                     onClick={() => handleRowClick(enq)}
                   >
-                    <td className="px-4 py-3 whitespace-nowrap text-white">{enq.name}</td>
-                    <td className="px-4 py-3">{enq.email}</td>
-                    <td className="px-4 py-3">{enq.service}</td>
-                    <td className="px-4 py-3">{enq.budget || '—'}</td>
-                    <td className="px-4 py-3">{new Date(enq.created_at).toLocaleDateString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p className="text-gray-500">No enquiries yet.</p>
-          )}
-        </div>
+                <td className="px-4 py-3 whitespace-nowrap text-white">{enq.name}</td>
+                <td className="px-4 py-3">{enq.email}</td>
+                <td className="px-4 py-3">{enq.service}</td>
+                <td className="px-4 py-3">{enq.budget || '—'}</td>
+                <td className="px-4 py-3">{new Date(enq.created_at).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-gray-500">No enquiries yet.</p>
+      )}
+    </div>
 
         {/* Pagination controls */}
         {totalPages > 1 && (
